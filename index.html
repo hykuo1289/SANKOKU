@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>群雄逐鹿・中等版</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#e6eadd; --card:#f4f6ee; --ink:#1f2a24; --muted:#5d6b60; --line:#c3ccb7;
+  --land:#d3ddc6; --water:#86aebb; --forest:#a9c19a; --castle:#dccfa6; --btn:#2f4a3f; --btnText:#f1f4ea;
+  --seal:#a3332e; --gold:#b98622; --good:#2f7a4f; --bad:#a3332e; --meter:#7f9c8a;
+  --serif:"Noto Serif TC","Songti TC","Source Han Serif TC","PMingLiU",serif;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b2426; --card:#263234; --ink:#e5eadf; --muted:#9aa89d; --line:#3a4a4c;
+    --land:#2e3c39; --water:#3f6270; --forest:#3c5a44; --castle:#5a5238; --btn:#7fae98; --btnText:#10201a;
+    --seal:#c9514a; --gold:#d9a640; --good:#6fc08f; --bad:#e07a72; --meter:#6e9b86;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b2426; --card:#263234; --ink:#e5eadf; --muted:#9aa89d; --line:#3a4a4c;
+  --land:#2e3c39; --water:#3f6270; --forest:#3c5a44; --castle:#5a5238; --btn:#7fae98; --btnText:#10201a;
+  --seal:#c9514a; --gold:#d9a640; --good:#6fc08f; --bad:#e07a72; --meter:#6e9b86;
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+button:disabled{cursor:not-allowed;opacity:.45}
+:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+[hidden]{display:none!important}
+h1,h2,h3{font-family:var(--serif);margin:0}
+
+/* title */
+.title{min-height:100dvh;display:grid;grid-template-columns:88px 1fr;gap:14px;padding:32px 18px 40px}
+.vt{display:flex;flex-direction:column;align-items:center;gap:18px;padding-top:6px}
+.vt h1{writing-mode:vertical-rl;font-weight:900;font-size:58px;line-height:1.1;letter-spacing:.14em}
+.seal{writing-mode:vertical-rl;background:var(--seal);color:#fff;font-family:var(--serif);font-weight:700;padding:8px 5px;border-radius:3px;font-size:16px;letter-spacing:.2em}
+.tside{display:flex;flex-direction:column;gap:12px;min-width:0}
+.sub{margin:6px 0 0;color:var(--muted)}
+.lead{margin:0 0 4px}
+.tabs{display:flex;gap:8px}
+.tab{flex:1;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 12px;min-height:56px}
+.tab b{display:block;font:700 18px var(--serif)}
+.tab small{color:var(--muted)}
+.tab.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.pick{display:grid;grid-template-columns:8px 1fr auto;gap:12px;align-items:center;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:12px 12px 12px 0;overflow:hidden}
+.pick i{align-self:stretch;display:block}
+.pick b{font:700 20px var(--serif)}
+.pick small{display:block;color:var(--muted);line-height:1.4}
+.pick em{font-style:normal;font-size:13px;border:1px solid var(--line);border-radius:99px;padding:1px 9px;white-space:nowrap}
+.linkbtn{background:none;border:0;color:var(--muted);text-decoration:underline;padding:8px 0;text-align:left;min-height:44px}
+.primary{background:var(--btn);color:var(--btnText);border:0;border-radius:6px;min-height:46px;padding:0 18px;font-weight:700}
+.ghost{background:var(--card);border:1px solid var(--line);border-radius:6px;min-height:46px;padding:0 16px}
+
+/* game */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--line)}
+.top .date{font:900 22px var(--serif);white-space:nowrap}
+.top .who{flex:1;display:flex;align-items:center;gap:7px;color:var(--muted);font-size:14px;min-width:0}
+.top .who i{width:10px;height:10px;border-radius:50%;flex:none}
+.top button{min-height:40px;padding:0 12px;border:1px solid var(--line);background:var(--card);border-radius:6px}
+.mapbox{position:relative;padding:8px 10px 0}
+.mapwrap{overflow:auto;max-height:78vh;border-radius:6px}
+#map{display:block;width:100%;height:auto;touch-action:manipulation}
+#map.zoom{width:175%}
+#btnZoom{position:absolute;right:16px;top:14px;z-index:2;min-height:36px;padding:0 12px;border:1px solid var(--line);background:var(--card);border-radius:6px;font-size:14px}
+#map .land{fill:var(--land);stroke:var(--ink);stroke-width:.35;stroke-linejoin:round}
+#map .river{fill:none;stroke:var(--water);stroke-width:1.1;stroke-linecap:round}
+#map .rv{fill:var(--water);font:500 2.6px var(--serif)}
+#map .link{stroke:var(--ink);stroke-opacity:.35;stroke-width:.3;stroke-dasharray:1.2 1}
+#map .link.on{stroke-opacity:.9;stroke-width:.6;stroke-dasharray:none;stroke:var(--gold)}
+#map .city{cursor:pointer}
+#map .hit{fill:transparent}
+#map .dot{stroke:var(--ink);stroke-width:.5}
+#map .mine{fill:#fff;fill-opacity:.9}
+#map .ring{fill:none;stroke:var(--gold);stroke-width:.7}
+#map .cn{font:700 3.3px var(--serif);text-anchor:middle;fill:var(--ink);paint-order:stroke;stroke:var(--land);stroke-width:.9px}
+#map .ct{font:500 2.6px var(--sans);text-anchor:middle;fill:var(--muted);paint-order:stroke;stroke:var(--land);stroke-width:.8px}
+#panel{padding:6px 14px 120px}
+.hint{color:var(--muted);text-align:center;padding:18px 0}
+.phead{display:flex;align-items:center;gap:10px;margin:8px 0 10px}
+.phead .dot{width:14px;height:14px;border-radius:50%;border:1px solid var(--ink)}
+.phead h2{font-size:24px}
+.phead .owner{color:var(--muted)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:0 0 10px}
+.stats div{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:6px 8px}
+.stats dt{font-size:12px;color:var(--muted)}
+.stats dd{margin:0;font:700 17px var(--serif)}
+.meter{display:grid;grid-template-columns:44px 1fr 34px;align-items:center;gap:8px;margin:3px 0;font-size:14px}
+.meter .bar,.ubar{height:7px;background:var(--line);border-radius:4px;overflow:hidden}
+.meter .bar i,.ubar i{display:block;height:100%;background:var(--meter);border-radius:4px}
+.meter .v{text-align:right;font-variant-numeric:tabular-nums}
+.cap{margin:14px 0 6px;font-size:13px;color:var(--muted)}
+.cmds{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.cmd{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:58px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:4px 2px;line-height:1.25}
+.cmd span{font:700 15px var(--serif)}
+.cmd small{font-size:11px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin:8px 0 0}
+.gen{display:flex;justify-content:space-between;gap:8px;align-items:baseline;padding:7px 0;border-bottom:1px solid var(--line)}
+.gen b{font:700 16px var(--serif);white-space:nowrap}
+.gen .gs{font-size:12.5px;color:var(--muted);text-align:right}
+.gen.done b{opacity:.5}
+.gen.done::after{content:"已行動";font-size:11px;color:var(--muted)}
+.bar-bottom{position:fixed;left:0;right:0;bottom:0;z-index:10;display:flex;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:var(--bg);border-top:1px solid var(--line)}
+.bar-bottom .ghost{flex:0 0 96px}
+.bar-bottom .primary{flex:1}
+
+/* sheet */
+.sheet{position:fixed;inset:0;z-index:50;display:flex;align-items:flex-end}
+.sheet .backdrop{position:absolute;inset:0;background:rgba(10,16,14,.5)}
+.sheet .card{position:relative;width:100%;max-height:84%;overflow-y:auto;background:var(--bg);border-radius:14px 14px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line)}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.sh h3{font-size:20px}
+.sh button{min-height:40px;padding:0 12px;background:var(--card);border:1px solid var(--line);border-radius:6px}
+.list{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-items:baseline;text-align:left;width:100%;min-height:52px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 12px}
+.row b{font:700 17px var(--serif)}
+.row .gs{text-align:right;font-size:13px;color:var(--muted)}
+.row small{grid-column:1/-1;color:var(--muted)}
+.row.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.btnrow{display:flex;gap:8px;margin-top:6px}
+.btnrow button{flex:1;min-height:44px}
+.step{display:grid;grid-template-columns:44px 1fr 44px 44px;align-items:center;gap:6px;margin:6px 0}
+.step button{min-height:40px;background:var(--card);border:1px solid var(--line);border-radius:6px}
+.step output{text-align:right;font:700 17px var(--serif);padding-right:4px}
+.lines p{margin:0;padding:6px 0;border-bottom:1px solid var(--line)}
+.sheet p{margin:6px 0}
+.cap-row{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px;margin-bottom:8px}
+.cap-row .gen{border:0;padding:0 0 6px}
+
+/* battle */
+.battle{position:fixed;inset:0;z-index:40;overflow-y:auto;background:var(--bg);padding:calc(14px + env(safe-area-inset-top,0px)) 12px calc(20px + env(safe-area-inset-bottom,0px))}
+.bwrap{max-width:520px;margin:0 auto}
+.bwrap h2{font-size:24px}
+.bhead{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin:10px 0}
+.cell{aspect-ratio:1;position:relative;border:0;border-radius:4px;background:var(--land);padding:0;display:flex;align-items:center;justify-content:center;min-width:0}
+.cell.f{background:var(--forest)}
+.cell.w{background:var(--water)}
+.cell.c{background:var(--castle)}
+.cell .tl{position:absolute;top:1px;left:3px;font:500 9px var(--serif);opacity:.6}
+.cell.mv{box-shadow:inset 0 0 0 2px var(--gold)}
+.cell.tg{box-shadow:inset 0 0 0 3px var(--bad)}
+.cell.sel{outline:2px solid var(--ink);outline-offset:-2px}
+.cell .mult{position:absolute;right:2px;bottom:1px;font:700 10px var(--sans);background:var(--bad);color:#fff;border-radius:3px;padding:0 3px;z-index:2}
+.step.w{grid-template-columns:78px 1fr 44px 44px}
+.tok{display:flex;flex-direction:column;align-items:center;line-height:1.1;padding:3px 1px;border-radius:5px;color:#fff;width:92%;text-shadow:0 1px 1px rgba(0,0,0,.45);border:1.5px solid rgba(0,0,0,.35)}
+.tok b{font:700 11px var(--serif);white-space:nowrap}
+.tok i{font-style:normal;font-size:10px}
+.tok.done{opacity:.55}
+.tok.foe{border-style:dashed}
+.binfo{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 12px;font-size:14px;min-height:56px}
+.blog{margin-top:8px;font-size:13px;color:var(--muted);min-height:58px}
+.blog p{margin:0;padding:1px 0}
+.blog p:last-child{color:var(--ink);font-weight:500}
+.acts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.acts button{min-height:48px;background:var(--card);border:1px solid var(--line);border-radius:6px;padding:4px 6px;line-height:1.25}
+.acts button.on{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}
+.acts button.warn{border-color:var(--bad)}
+.result{margin-top:14px;padding:14px;background:var(--card);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:6px}
+.result b{font:900 20px var(--serif)}
+
+#toast{position:fixed;left:50%;top:calc(64px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:60;max-width:88%;background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:8px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s;text-align:center}
+#toast.show{opacity:1}
+@media (prefers-reduced-motion: reduce){#toast{transition:none}}
+@media (min-width:640px){
+  #app{max-width:560px;margin:0 auto}
+  .bar-bottom{max-width:560px;margin:0 auto}
+  .sheet .card{max-width:560px;margin:0 auto}
+}
+</style>
+</head>
+<body>
+<main id="app">
+  <section id="title" class="title">
+    <div class="vt"><h1>群雄逐鹿</h1><span class="seal">天下</span></div>
+    <div class="tside">
+      <div>
+        <p class="sub">三國志風格策略遊戲・中等版</p>
+        <p class="lead">三十座城池、近百名武將。經營內政，用計策與外交瓦解對手，在格子戰場上指揮攻城，統一天下。</p>
+      </div>
+      <div class="tabs" id="tabs"></div>
+      <div id="picks" class="list"></div>
+      <button id="btnResume" class="primary" hidden>繼續上次進度</button>
+      <button id="btnHow" class="linkbtn">玩法說明</button>
+      <div class="btnrow"><button id="btnMusic" class="ghost"></button><button id="btnSfx" class="ghost"></button></div>
+    </div>
+  </section>
+
+  <section id="game" hidden>
+    <header class="top">
+      <div class="date" id="date"></div>
+      <div class="who" id="who"></div>
+      <button id="btnMenu">選單</button>
+    </header>
+    <div class="mapbox">
+      <button id="btnZoom">放大地圖</button>
+      <div class="mapwrap"><svg id="map" viewBox="0 0 100 110" role="group" aria-label="天下地圖"></svg></div>
+    </div>
+    <div id="panel"></div>
+    <div class="bar-bottom">
+      <button id="btnLog" class="ghost">戰報</button>
+      <button id="btnEnd" class="primary">結束本月</button>
+    </div>
+  </section>
+
+  <div id="sheet" class="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="backdrop" id="sheetBack"></div>
+    <div class="card">
+      <div class="sh"><h3 id="sheetTitle"></h3><button id="sheetX">關閉</button></div>
+      <div id="sheetBody"></div>
+    </div>
+  </div>
+  <div id="battle" class="battle" hidden></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+</main>
+
+<script>
+// ==LOGIC_START==
+const STATS=[['t','統'],['w','武'],['z','智'],['p','政'],['m','魅']];
+// [名,x,y,人口,農業,商業,城防]
+const CITY_DEF=[
+ ['薊',74,8,90000,55,50,60],['晉陽',44,16,100000,60,50,65],['上黨',52,27,80000,55,40,70],['河東',34,28,100000,65,55,55],
+ ['南皮',72,22,120000,70,60,55],['鄴',62,30,220000,85,80,70],['平原',80,32,110000,65,60,50],['北海',92,38,100000,60,60,50],
+ ['天水',12,32,90000,50,40,60],['長安',22,42,170000,70,70,75],['洛陽',42,40,150000,60,70,70],['濮陽',62,40,130000,70,65,55],
+ ['許昌',56,50,190000,78,80,60],['宛',44,52,150000,70,65,60],['汝南',66,58,140000,75,60,50],['下邳',80,48,140000,70,70,50],
+ ['壽春',74,66,150000,70,65,60],['建業',84,76,160000,65,70,65],['吳',95,68,150000,70,70,55],['會稽',94,88,110000,60,55,50],
+ ['柴桑',68,80,100000,60,55,60],['豫章',72,96,110000,65,55,50],['襄陽',46,66,200000,80,70,70],['江陵',40,78,160000,75,65,65],
+ ['長沙',54,90,130000,70,55,55],['武陵',32,90,90000,55,40,50],['漢中',26,54,100000,55,45,75],['成都',12,70,210000,88,65,70],
+ ['江州',24,82,120000,65,55,65],['建寧',8,96,70000,50,35,50]
+];
+const EDGES=[[0,4],[0,1],[1,2],[1,3],[2,5],[2,10],[2,3],[3,9],[3,10],[4,5],[4,6],[5,11],[5,6],[6,7],[6,11],[6,15],[7,15],
+ [8,9],[8,26],[9,10],[9,26],[10,11],[10,12],[10,13],[11,12],[12,13],[12,14],[13,22],[13,26],[14,15],[14,16],[14,22],[15,16],
+ [16,17],[16,20],[17,18],[17,19],[17,20],[18,19],[19,21],[20,21],[20,24],[21,24],[22,23],[22,26],[23,24],[23,25],[23,28],
+ [24,25],[25,28],[26,27],[27,28],[27,29],[28,29]];
+const ADJ=CITY_DEF.map(()=>[]);EDGES.forEach(([a,b])=>{ADJ[a].push(b);ADJ[b].push(a);});
+// [名,統,武,智,政,魅,194配置,207配置]  配置=[勢力,城](勢力-1為在野) / 'p'事件登場 / 0不存在
+const GEN_DB=[
+ ['曹操',96,72,91,94,96,[0,12],[0,5]],['夏侯惇',82,92,52,45,70,[0,12],[0,12]],['夏侯淵',86,90,56,40,64,[0,10],[0,9]],
+ ['曹仁',86,86,55,48,68,[0,10],[0,14]],['曹洪',75,78,40,38,55,[0,10],[0,10]],['荀彧',40,28,94,98,85,[0,12],[0,12]],
+ ['荀攸',40,25,95,85,75,'p',[0,5]],['郭嘉',52,30,98,78,80,'p',0],['程昱',65,50,88,80,60,[0,12],[0,11]],
+ ['賈詡',45,30,98,82,60,[-1,9],[0,12]],['司馬懿',78,50,98,88,76,0,[0,10]],['典韋',70,98,36,24,58,[0,10],0],
+ ['許褚',75,97,35,28,52,'p',[0,12]],['樂進',82,86,50,36,56,[0,12],[0,4]],['李典',75,72,70,60,62,[0,12],[0,2]],
+ ['于禁',84,78,60,56,60,'p',[0,11]],['徐晃',84,90,60,48,66,[-1,3],[0,10]],['張郃',88,88,66,45,62,[3,2],[0,5]],
+ ['滿寵',65,60,78,82,60,'p',[0,16]],['鍾繇',30,25,75,88,70,'p',[0,9]],['牽招',62,62,60,70,60,'p',[0,0]],
+ ['郭淮',78,70,70,70,60,'p',[0,6]],['臧霸',78,84,50,50,60,[1,15],[0,7]],['張繡',78,86,60,45,60,[8,13],[0,1]],
+ ['曹真',72,72,60,60,60,'p',[0,3]],
+ ['劉備',75,73,74,78,99,[1,15],[1,13]],['關羽',95,97,75,62,93,[1,15],[1,13]],['張飛',88,98,30,22,45,[1,15],[1,13]],
+ ['趙雲',91,96,76,60,80,[4,0],[1,13]],['糜竺',30,20,55,85,68,[1,15],[1,13]],['簡雍',30,25,60,70,72,[1,7],[1,13]],
+ ['孫乾',30,20,60,75,70,'p',[1,13]],['陳登',60,50,92,86,66,[1,7],0],['徐庶',60,45,92,80,85,'p',[1,13]],
+ ['諸葛亮',70,35,100,95,98,'p',[-1,22]],['龐統',45,30,96,80,70,'p',[-1,22]],
+ ['劉表',55,40,68,86,78,[6,22],[3,22]],['蔡瑁',80,66,60,60,52,[6,22],[3,22]],['蒯越',30,22,86,86,68,[6,23],[3,22]],
+ ['文聘',82,80,55,50,60,[6,23],[3,23]],['黃忠',84,95,50,40,70,[6,24],[3,24]],['魏延',84,90,48,36,38,'p',[3,23]],
+ ['張羨',40,35,55,60,50,[6,25],[3,25]],
+ ['孫策',93,95,60,70,92,[2,18],0],['孫權',75,60,75,86,92,0,[2,17]],['周瑜',95,72,95,84,90,[2,17],[2,20]],
+ ['張昭',30,20,80,95,78,[2,18],[2,17]],['程普',82,80,62,60,66,[2,17],[2,18]],['黃蓋',78,84,60,55,64,[2,18],[2,20]],
+ ['韓當',74,82,40,35,48,[2,19],[2,19]],['周泰',82,90,40,30,55,[2,18],[2,18]],['呂範',55,40,72,76,64,[2,19],[2,17]],
+ ['太史慈',85,93,55,40,76,[10,20],0],['呂蒙',82,78,84,72,68,'p',[2,19]],['魯肅',60,40,90,88,82,'p',[2,17]],
+ ['陸遜',88,70,92,80,78,'p',[-1,18]],['甘寧',82,94,55,35,48,[6,23],[2,20]],['凌統',80,86,50,40,60,'p',[2,19]],
+ ['朱然',72,74,60,50,58,'p',[2,21]],
+ ['劉繇',40,30,45,60,62,[10,20],0],['華歆',30,20,78,88,70,[10,21],0],['笮融',60,75,35,40,45,[10,21],0],
+ ['袁術',38,30,50,55,45,[8,16],0],['紀靈',78,88,38,28,42,[8,14],0],['張勳',66,72,40,35,40,[8,13],0],['閻象',30,20,70,80,60,[8,16],0],
+ ['袁紹',74,70,60,70,88,[3,5],0],['顏良',82,93,30,22,50,[3,5],0],['文醜',80,92,28,20,48,[3,4],0],['田豐',35,24,93,80,70,[3,5],0],
+ ['沮授',40,26,90,82,72,[3,1],0],['許攸',30,22,86,68,40,[3,5],0],['審配',50,35,78,86,50,[3,6],0],['袁譚',60,58,55,60,60,[3,6],0],
+ ['高覽',75,82,45,35,50,[3,2],0],
+ ['呂布',90,100,28,20,40,[9,11],0],['陳宮',50,30,92,78,65,[9,11],0],['高順',88,86,50,35,55,[9,11],0],['張遼',88,90,66,52,74,[9,11],[0,15]],
+ ['公孫瓚',82,85,52,56,70,[4,0],0],['嚴綱',66,70,40,50,55,[4,0],0],['單經',60,62,50,55,50,[4,0],0],
+ ['馬騰',80,88,50,58,76,[5,9],0],['馬超',90,97,45,40,78,[5,8],[5,8]],['韓遂',66,70,70,64,60,[5,8],[5,8]],
+ ['龐德',82,92,45,38,60,[5,9],[5,8]],['馬岱',60,75,40,30,50,[5,3],[5,8]],
+ ['劉璋',30,25,45,70,60,[7,27],[4,27]],['張任',80,86,60,45,62,[7,27],[4,27]],['法正',35,25,90,82,72,[7,27],[4,27]],
+ ['嚴顏',78,82,56,50,66,[7,28],[4,28]],['黃權',62,50,85,80,70,[7,28],[4,28]],['李嚴',75,70,70,70,60,[7,29],[4,29]],
+ ['張魯',50,45,70,78,70,[11,26],[6,26]],['楊松',30,20,65,60,40,[11,26],[6,26]],['閻圃',40,30,85,80,60,[11,26],[6,26]],
+ ['楊昂',72,80,40,35,50,[11,26],[6,26]]
+];
+const POOL_EXTRA=[['王平',78,76,62,50,60],['廖化',72,76,50,40,55],['周倉',72,85,30,25,50],['關平',76,82,50,45,60],['陳到',80,82,52,40,60],['馬良',30,20,86,86,75]];
+const SCEN={
+ 194:{title:'群雄割據',sub:'194年・諸侯並起',year:194,
+  F:[['曹操','#3b7bbf'],['劉備','#3f9a62'],['孫策','#cc5648'],['袁紹','#8d6bbd'],['公孫瓚','#cf9a2e'],['馬騰','#4aa0a6'],['劉表','#9a9a3c'],['劉璋','#b07a52'],['袁術','#d6798f'],['呂布','#7d8794'],['劉繇','#6f8fbf'],['張魯','#c76f2a']],
+  own:[4,3,3,5,3,3,3,1,5,5,0,9,0,8,8,1,8,2,2,2,10,10,6,6,6,6,11,7,7,7]},
+ 207:{title:'赤壁前夕',sub:'207年・曹操已定北方',year:207,
+  F:[['曹操','#3b7bbf'],['劉備','#3f9a62'],['孫權','#cc5648'],['劉表','#9a9a3c'],['劉璋','#b07a52'],['馬超','#4aa0a6'],['張魯','#c76f2a']],
+  own:[0,0,0,0,0,0,0,0,5,0,0,0,0,1,0,0,0,2,2,2,2,2,3,3,3,3,6,4,4,4]}
+};
+
+// 國與國的歷史友好度（20~80），未列出者約50
+const FR_PAIRS={
+ 194:[['曹操','劉備',60],['曹操','袁紹',75],['曹操','呂布',20],['曹操','袁術',25],['曹操','劉表',40],['曹操','孫策',45],['曹操','馬騰',60],['曹操','公孫瓚',55],['曹操','張魯',35],['曹操','劉繇',45],
+  ['劉備','呂布',40],['劉備','袁紹',55],['劉備','公孫瓚',80],['劉備','袁術',25],['劉備','孫策',50],['劉備','劉表',65],['劉備','劉璋',55],
+  ['袁紹','公孫瓚',20],['袁紹','袁術',25],['袁紹','呂布',30],['袁紹','劉表',65],['袁紹','馬騰',50],['袁術','孫策',60],['袁術','呂布',40],['袁術','劉表',25],['袁術','劉繇',30],
+  ['孫策','劉繇',20],['孫策','劉表',25],['劉表','劉璋',60],['劉璋','張魯',20],['馬騰','劉璋',55],['呂布','馬騰',45]],
+ 207:[['曹操','劉備',25],['曹操','孫權',30],['曹操','劉表',35],['曹操','劉璋',50],['曹操','馬超',25],['曹操','張魯',30],
+  ['劉備','孫權',60],['劉備','劉表',70],['劉備','劉璋',55],['劉備','馬超',50],['劉備','張魯',30],
+  ['孫權','劉表',20],['孫權','劉璋',50],['孫權','馬超',45],['孫權','張魯',40],['劉表','劉璋',60],['劉表','馬超',40],['劉表','張魯',35],
+  ['劉璋','張魯',20],['劉璋','馬超',40],['馬超','張魯',65]]
+};
+let S=null;
+let pending=[];
+function sfx(n){try{if(window.Snd)window.Snd.play(n);}catch(e){}}
+const fn=f=>S.F[f].name, fc=f=>S.F[f].col;
+const rnd=(a,b)=>a+Math.random()*(b-a);
+const ri=(a,b)=>Math.floor(rnd(a,b+1));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=ri(0,i);[a[i],a[j]]=[a[j],a[i]];}return a;};
+const byCombat=(a,b)=>(b.t*.6+b.w*.4)-(a.t*.6+a.w*.4);
+const total5=g=>g.t+g.w+g.z+g.p+g.m;
+
+function genFromDB(row,pl,id){
+  const f=pl[0],c=pl[1],lord=f>=0&&row[0]===S.F[f].name;
+  return {id,name:row[0],t:row[1],w:row[2],z:row[3],p:row[4],m:row[5],f,c,lord,loyal:lord?100:ri(70,95),acted:false};
+}
+function mkWander(row,cid){return {id:S.nextId++,name:row[0],t:row[1],w:row[2],z:row[3],p:row[4],m:row[5],f:-1,c:cid,lord:false,loyal:ri(55,95),acted:false};}
+function ensureOfficer(c){
+  if(serving(c.id).length)return;
+  S.gens.push({id:S.nextId++,name:`${c.name}太守`,t:ri(45,65),w:ri(45,65),z:ri(45,65),p:ri(45,65),m:ri(45,65),f:c.f,c:c.id,lord:false,loyal:70,acted:false});
+}
+function newGame(scn,pf){
+  const sc=SCEN[scn];pending=[];
+  S={scn,year:sc.year,startYear:sc.year,month:1,pf,turn:0,over:null,log:[],history:[],allies:[],nextId:0,
+     F:sc.F.map(a=>({name:a[0],col:a[1]})),pool:[],cities:[],gens:[]};
+  S.cities=CITY_DEF.map((d,i)=>{const j=()=>rnd(.9,1.1);
+    return {id:i,name:d[0],x:d[1],y:d[2],f:sc.own[i],pop:d[3],gold:Math.round(d[3]*0.014*j()/10)*10,food:Math.round(d[3]*0.05*j()/10)*10,
+      troops:Math.round(d[3]*0.085*j()/100)*100,loy:ri(62,80),farm:d[4],comm:d[5],def:d[6],train:ri(50,72)};});
+  initFriendship(scn);
+  const key=scn===194?6:7;
+  for(const row of GEN_DB){const pl=row[key];if(!pl)continue;if(pl==='p'){S.pool.push(row);continue;}S.gens.push(genFromDB(row,pl,S.nextId++));}
+  for(const x of POOL_EXTRA)S.pool.push(x);
+  for(const c of S.cities)ensureOfficer(c);
+}
+function rep(t){S.log.push(t);}
+function serving(c){return S.gens.filter(g=>g.f===S.cities[c].f&&g.c===c);}
+function freeGens(c){return serving(c).filter(g=>!g.acted);}
+function wanderers(c){return S.gens.filter(g=>g.f===-1&&g.c===c);}
+function captivesOf(c){return S.gens.filter(g=>g.f===-2&&g.c===c);}
+function fcount(f){return S.cities.filter(c=>c.f===f).length;}
+function allied(a,b){return S.allies.some(x=>x.m>0&&((x.a===a&&x.b===b)||(x.a===b&&x.b===a)));}
+function troopsOf(f){return S.cities.filter(c=>c.f===f).reduce((s,c)=>s+c.troops,0);}
+// 國與國友好度（對稱，0~100，初始20~80）
+function frKey(a,b){return a<b?a+'-'+b:b+'-'+a;}
+function frOf(a,b){return (S&&S.fr&&S.fr[frKey(a,b)]!=null)?S.fr[frKey(a,b)]:50;}
+function addFr(a,b,n){if(a===b||a<0||b<0)return;if(!S.fr)S.fr={};S.fr[frKey(a,b)]=clamp(frOf(a,b)+n,0,100);}
+function initFriendship(scn){
+  S.fr={};
+  const n=S.F.length;
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++)S.fr[frKey(i,j)]=ri(44,56);
+  for(const [a,b,v] of FR_PAIRS[scn]){
+    const i=S.F.findIndex(f=>f.name===a),j=S.F.findIndex(f=>f.name===b);
+    if(i>=0&&j>=0)S.fr[frKey(i,j)]=clamp(v,20,80);
+  }
+}
+// 仇恨值：武將對各勢力的敵意（0~100）
+function hateOf(g,f){return (g&&g.hate&&g.hate[f])||0;}
+function addHate(g,f,n){if(!g||f==null||f<0)return;if(!g.hate)g.hate={};g.hate[f]=clamp((g.hate[f]||0)+n,0,100);if(!g.hate[f])delete g.hate[f];}
+function lordOf(f){return S.gens.find(g=>g.lord&&g.f===f)||null;}
+
+/* ---- 內政・人事 ---- */
+function opDevelop(c,g,key){
+  const gain=Math.round((3+g.p/100*8)*rnd(.8,1.2));const b=c[key];c[key]=Math.min(100,b+gain);c.gold-=100;g.acted=true;
+  return `${g.name}${key==='farm'?'開墾農地':'振興商業'}，${key==='farm'?'農業':'商業'}+${c[key]-b}`;
+}
+function opFort(c,g){const gain=Math.round((3+(g.p+g.t)/200*6)*rnd(.8,1.2));const b=c.def;c.def=Math.min(100,b+gain);c.gold-=150;g.acted=true;return `${g.name}修築城牆，城防+${c.def-b}`;}
+function opPacify(c,g){const gain=Math.round((5+g.m/100*8)*rnd(.8,1.2));const b=c.loy;c.loy=Math.min(100,b+gain);c.gold-=100;g.acted=true;return `${g.name}安撫百姓，民忠+${c.loy-b}`;}
+function opTrain(c,g){const gain=Math.round((4+g.t/100*8)*rnd(.8,1.2));const b=c.train;c.train=Math.min(100,b+gain);c.gold-=50;g.acted=true;return `${g.name}操練士兵，訓練+${c.train-b}`;}
+function enlistAmt(g){return Math.round(1000*(0.8+g.m/200));}
+function opEnlist(c,g){const n=Math.round(enlistAmt(g)*rnd(.9,1.1)/10)*10;c.troops+=n;c.pop-=n;c.loy=Math.max(0,c.loy-3);c.gold-=150;g.acted=true;return `${g.name}徵兵${n}人`;}
+function recruitChance(g,t,captive,fid){
+  const rf=(t.rf&&t.rf[fid])||0;
+  return clamp((captive?0.2:0.25)+(g.m-t.loyal*0.6)/100-hateOf(t,fid)*0.004+rf*0.08,0.05,0.95);
+}
+function opRecruit(c,g,t,captive){
+  if(!captive)c.gold-=100;
+  g.acted=true;
+  const ok=Math.random()<recruitChance(g,t,captive,c.f);
+  addHate(t,c.f,-ri(4,8));
+  if(ok){t.f=c.f;t.acted=true;t.loyal=ri(60,80);if(t.rf)delete t.rf[c.f];return {ok:true,msg:`${t.name}答應效力於${fn(c.f)}軍！`};}
+  if(!t.rf)t.rf={};t.rf[c.f]=(t.rf[c.f]||0)+1;
+  return {ok:false,msg:`${t.name}婉拒了${g.name}的邀請（誠意累積，下次更容易成功）`};
+}
+function opReward(c,t){c.gold-=200;t.loyal=Math.min(100,t.loyal+12);return `賞賜${t.name}，忠誠升至${t.loyal}`;}
+
+/* ---- 計策・外交 ---- */
+function sowChance(g,t){return clamp(0.3+(g.z-t.z)/100*0.7,0.1,0.8);}
+function opSow(c,g,t){
+  c.gold-=200;g.acted=true;
+  if(Math.random()>sowChance(g,t)){addHate(t,c.f,ri(8,15));addFr(c.f,t.f,-3);return {ok:false,msg:`離間計被${t.name}識破，對我方更添敵意`};}
+  t.loyal=Math.max(0,t.loyal-ri(15,30));
+  if(t.loyal<30){
+    if(Math.random()<clamp(0.3+(g.m-50)/150-hateOf(t,c.f)*0.004,0.15,0.7)){t.f=c.f;t.c=c.id;t.acted=true;t.loyal=ri(60,75);return {ok:true,msg:`${t.name}動搖，投靠了我方！`};}
+    t.f=-1;return {ok:true,msg:`${t.name}失去對舊主的忠誠，成為在野武將`};
+  }
+  addHate(t,c.f,3);
+  return {ok:true,msg:`離間成功，${t.name}忠誠降至${t.loyal}`};
+}
+function rumorChance(g){return clamp(0.4+(g.z-60)/100,0.2,0.9);}
+function opRumor(c,g,t){
+  c.gold-=100;g.acted=true;addFr(c.f,t.f,-ri(2,5));
+  if(Math.random()>rumorChance(g))return {ok:false,msg:`流言沒有奏效，${t.name}民心如常`};
+  const d=ri(10,20);t.loy=Math.max(0,t.loy-d);return {ok:true,msg:`${t.name}謠言四起，民忠-${d}（現${t.loy}）`};
+}
+// 結盟成功率受兩國友好度影響（友好度每高1點+0.6%）
+function allyChance(g,tf,fid){return clamp(0.25+(g.m-50)/120+(frOf(fid,tf)-50)*0.006,0.05,0.9);}
+function opAlly(c,g,tf){
+  c.gold-=300;g.acted=true;
+  const ch=allyChance(g,tf,c.f);
+  addFr(c.f,tf,ri(3,6));
+  if(Math.random()<ch){S.allies.push({a:c.f,b:tf,m:12});addFr(c.f,tf,8);return {ok:true,msg:`與${fn(tf)}締結12個月的同盟`};}
+  return {ok:false,msg:`${fn(tf)}拒絕了同盟（友好度略升至${frOf(c.f,tf)}）`};
+}
+function opGift(c,t,n){c.gold-=n;addHate(t,c.f,-Math.round(n/20));return `贈禮金${n}予${t.name}，仇恨降至${hateOf(t,c.f)}`;}
+function opGiftFaction(c,tf,n){c.gold-=n;addFr(c.f,tf,Math.round(n/20));return `贈禮金${n}予${fn(tf)}軍，友好度升至${frOf(c.f,tf)}`;}
+
+/* ---- 日戰（電腦用） ---- */
+const sideS=g=>g.length?Math.max(...g.map(x=>(x.t*.6+x.w*.4)/100))+0.04*(g.length-1):0.3;
+const sideZ=g=>g.length?Math.max(...g.map(x=>x.z)):30;
+function newBattle(from,to,attGens,troops){
+  const A=S.cities[from],D=S.cities[to];
+  const dg=S.gens.filter(g=>g.f===D.f&&g.c===to).sort(byCombat);
+  return {from,to,day:1,log:[],done:null,txt:'',
+    a:{f:A.f,gens:attGens,n:troops,n0:troops,train:A.train,s:sideS(attGens),z:sideZ(attGens)},
+    d:{f:D.f,gens:dg,n:D.troops,n0:D.troops,train:D.train,s:sideS(dg),z:sideZ(dg),def:D.def}};
+}
+function launch(from,to,gens,troops,food,alloc){
+  const A=S.cities[from],fd=food==null?Math.ceil(troops/10):food;A.troops-=troops;A.food-=fd;
+  for(const g of gens){g.acted=true;g.c=-1;}
+  const b=newBattle(from,to,gens,troops);b.food=fd;b.alloc=alloc||null;b.agens=gens.slice();b.dgens=b.d.gens.slice();return b;
+}
+function fireChance(own,en){return clamp(0.3+(own.z-en.z)/100*0.8,0.1,0.85);}
+function tactMods(t,own,en){
+  if(t==='fire')return Math.random()<fireChance(own,en)?{out:2.2,take:0.6}:{out:0.4,take:1.2};
+  if(t==='chg')return {out:1.4,take:1.3};
+  return {out:1,take:1};
+}
+function battleDay(b,ta,td){
+  const ma=tactMods(ta,b.a,b.d),md=tactMods(td,b.d,b.a);
+  const base=(X,wall)=>X.n*0.2*Math.max(0.2,X.s)*(0.5+X.train/200)*rnd(.85,1.15)/(wall?1+b.d.def/150:1);
+  const dD=Math.min(b.d.n,Math.round(base(b.a,true)*ma.out*md.take));
+  const dA=Math.min(b.a.n,Math.round(base(b.d,false)*md.out*ma.take));
+  b.d.n-=dD;b.a.n-=dA;b.d.def=Math.max(0,b.d.def-2);b.day++;
+  if(b.d.n<=0)b.done='win';else if(b.a.n<=0)b.done='lose';else if(b.day>15)b.done='timeout';
+}
+function pickTact(side){const r=Math.random();const fp=side.z>=75?0.25:0.1;if(r<fp)return 'fire';if(r<fp+0.2)return 'chg';return 'atk';}
+function pickFlee(oldF,lost){
+  const rem=S.cities.filter(c=>c.f===oldF&&c.id!==lost);if(!rem.length)return -1;
+  const near=rem.filter(c=>ADJ[lost].includes(c.id));const pool=near.length?near:rem;return pool[ri(0,pool.length-1)].id;
+}
+function autoCaptives(cid,f){
+  const cap=captivesOf(cid);if(!cap.length)return;
+  const lead=S.gens.filter(g=>g.f===f&&g.c===cid).sort((a,b)=>b.m-a.m)[0];
+  for(const t of cap){
+    if(t.lord){if(Math.random()<.5)t.f=-1;else S.gens.splice(S.gens.indexOf(t),1);continue;}
+    const ch=lead?clamp(0.35+(lead.m-t.loyal*0.6)/100-hateOf(t,f)*0.004,0.05,0.8):0.1;
+    if(Math.random()<ch){t.f=f;t.c=cid;t.acted=true;t.loyal=ri(60,80);}else t.f=-1;
+  }
+}
+function conquer(b){
+  const A=S.cities[b.from],D=S.cities[b.to],oldF=D.f;
+  const dg=S.gens.filter(g=>g.f===oldF&&g.c===b.to);
+  const rem=S.cities.some(c=>c.f===oldF&&c.id!==b.to);
+  for(const g of dg){
+    if(rem&&(g.lord||Math.random()<0.6)){g.c=pickFlee(oldF,b.to);g.acted=true;}
+    else if(!rem&&!g.lord&&Math.random()<0.25){g.f=-1;}
+    else{g.f=-2;g.capBy=A.f;}
+  }
+  D.f=A.f;D.troops=b.a.n;D.gold=Math.round(D.gold*.5);D.food=Math.round(D.food*.5);
+  D.loy=Math.max(15,D.loy-20);D.farm=Math.round(D.farm*.9);D.comm=Math.round(D.comm*.9);
+  for(const g of b.a.gens){g.c=b.to;g.acted=true;}
+  for(const g of S.gens)if(g.f===oldF&&!dg.includes(g))addHate(g,A.f,3);
+  if(A.f!==S.pf)autoCaptives(b.to,A.f);
+}
+function refreshDefenders(b){
+  const D=S.cities[b.to];
+  const dg=S.gens.filter(g=>g.f===D.f&&g.c===b.to).sort(byCombat);
+  b.d={f:D.f,gens:dg,n:D.troops,n0:D.troops,train:D.train,s:sideS(dg),z:sideZ(dg),def:D.def};
+  b.dgens=dg.slice();
+}
+// 守方撤退：武將、兵力、金糧移往 destId，攻方不戰而入城
+function performRetreat(b,destId,troops){
+  const D=S.cities[b.to],R=S.cities[destId];
+  const gens=S.gens.filter(g=>g.f===D.f&&g.c===b.to);
+  for(const g of gens){g.c=destId;g.acted=true;}
+  const mt=Math.floor(troops*0.9),mg=Math.floor(D.gold*0.8),mf=Math.floor(D.food*0.8);
+  R.troops+=mt;R.gold+=mg;R.food+=mf;
+  D.troops=0;D.gold=0;D.food=0;
+  b.d.n=0;b.d.gens=[];b.done='win';
+  b.extra=`我軍退往${R.name}：武將${gens.length}人、兵${mt}、金${mg}、糧${mf}`;
+  b.txt=finishBattle(b);
+  return b.txt;
+}
+function battleHate(b){
+  const win=b.done==='win'?'a':(b.done==='lose'?'d':null);
+  for(const g of (b.agens||[]))addHate(g,b.d.f,ri(6,12)+(win==='d'?8:0));
+  for(const g of (b.dgens||[]))addHate(g,b.a.f,ri(6,12)+(win==='a'?8:0));
+}
+function finishBattle(b){
+  const A=S.cities[b.from],D=S.cities[b.to],af=b.a.f,df=b.d.f;let txt;
+  if(!b.hated){b.hated=true;battleHate(b);addFr(af,df,-ri(4,8)-(b.done==='win'?6:0));}
+  const an=af===S.pf?'我軍':fn(af)+'軍';
+  if(b.done==='win'){
+    conquer(b);D.food+=b.fleft||0;txt=`${an}攻陷了${D.name}！`;
+    if(fcount(df)===0)txt+=`${fn(df)}勢力滅亡。`;
+  }else{
+    D.troops=Math.max(0,b.d.n);D.def=b.d.def;
+    if(b.done==='lose'){
+      for(const g of b.a.gens){if(!g.lord&&Math.random()<0.25){g.f=-2;g.capBy=df;g.c=b.to;}else g.c=b.from;}
+      if(df!==S.pf)autoCaptives(b.to,df);
+      txt=`${an}攻打${D.name}失敗，全軍覆沒。`;
+    }else{
+      A.troops+=b.a.n;A.food+=b.fleft||0;for(const g of b.a.gens)g.c=b.from;
+      txt=b.done==='retreat'?`${an}自${D.name}撤退。`:`${an}久攻${D.name}不下，撤軍。`;
+    }
+  }
+  return txt;
+}
+function autoRun(b){
+  while(!b.done){
+    if(b.a.n<b.a.n0*0.4&&b.a.n<b.d.n){b.done='retreat';break;}
+    battleDay(b,pickTact(b.a),pickTact(b.d));
+  }
+  if(b.fleft==null)b.fleft=Math.round((b.food||0)*0.4);
+  b.txt=finishBattle(b);
+}
+function autoBattle(b){
+  autoRun(b);
+  if(b.a.f===S.pf||b.d.f===S.pf||b.done==='win')rep(`${b.txt}（攻方損${b.a.n0-b.a.n}，守方損${b.d.n0-b.d.n}）`);
+}
+
+/* ---- 格子戰場 ---- */
+const GW=7,GH=8,DIRS=[[1,0],[-1,0],[0,1],[0,-1]];
+const kk=(x,y)=>x+','+y;
+const dist=(a,b)=>Math.abs(a.x-b.x)+Math.abs(a.y-b.y);
+const FLANK=[1,1,2,4,6];   // 與目標相鄰的我方部隊數 -> 攻擊倍率
+function updateHunger(G){for(const u of G.U)if(u.side==='a')u.mor=G.food>0?1:0.7;}
+function initGrid(b){
+  const D=S.cities[b.to];
+  const t=[];for(let y=0;y<GH;y++)t.push(new Array(GW).fill('.'));
+  const free=[];for(let y=2;y<=5;y++)for(let x=0;x<GW;x++)free.push([x,y]);
+  shuffle(free).slice(0,9).forEach(([x,y],i)=>{t[y][x]=i<7?'f':'w';});
+  t[0][3]='c';
+  const dummy={name:'守軍',t:50,w:50,z:40,p:40,m:40};
+  const ag=b.a.gens,dg=b.d.gens.length?b.d.gens.slice(0,4):[dummy];
+  const split=(n,k)=>{const base=Math.floor(n/k);const a=new Array(k).fill(base);a[0]+=n-base*k;return a;};
+  const an=(b.alloc&&b.alloc.length===ag.length)?b.alloc.slice():split(b.a.n,ag.length),dn=split(b.d.n,dg.length);
+  const apos=[[3,7],[2,7],[4,7],[1,7],[5,7]],dpos=[[3,0],[2,1],[4,1],[3,2]];
+  const U=[];
+  ag.forEach((g,i)=>U.push({id:'a'+i,side:'a',g,n:an[i],n0:an[i],x:apos[i][0],y:apos[i][1],acted:false,moved:false,train:b.a.train,mor:1}));
+  dg.forEach((g,i)=>U.push({id:'d'+i,side:'d',g,n:dn[i],n0:dn[i],x:dpos[i][0],y:dpos[i][1],acted:false,moved:false,train:b.d.train,mor:clamp(0.8+D.loy/500,0.8,1)}));
+  const G={b,t,U,turn:1,done:null,log:[],def:b.d.def,food:b.food||0,sel:null,reach:{},mode:'atk',busy:false,auto:false,confirmRet:false};
+  updateHunger(G);
+  checkGrid(G);
+  return G;
+}
+const uAt=(G,x,y)=>G.U.find(u=>u.n>0&&u.x===x&&u.y===y);
+const movOf=u=>clamp(2+(u.g.t>=80?1:0)+(u.g.w>=90?1:0),2,4);
+function reach(G,u){
+  const m=movOf(u),best={};best[kk(u.x,u.y)]=0;let changed=true;
+  while(changed){
+    changed=false;
+    for(const key of Object.keys(best)){
+      const [x,y]=key.split(',').map(Number),c=best[key];
+      for(const [dx,dy] of DIRS){
+        const nx=x+dx,ny=y+dy;if(nx<0||ny<0||nx>=GW||ny>=GH)continue;
+        const ter=G.t[ny][nx];if(ter==='w')continue;
+        const o=uAt(G,nx,ny);if(o&&o!==u)continue;
+        const cost=c+(ter==='f'?2:1);
+        if(cost<=m&&(best[kk(nx,ny)]===undefined||cost<best[kk(nx,ny)])){best[kk(nx,ny)]=cost;changed=true;}
+      }
+    }
+  }
+  return best;
+}
+function inRange(a,b,mode){const d=dist(a,b);return mode==='fire'?(d>=1&&d<=2):d===1;}
+// 兵力較多的一方：每多一倍攻擊力×1.2（上限×2.5）
+function ratioMult(a,d){return (a.n>d.n&&d.n>0)?Math.min(2.5,Math.pow(1.2,Math.log2(a.n/d.n))):1;}
+// 協同攻擊：與目標相鄰的我方部隊數 2→×2、3→×4、4→×6
+function flankMult(G,att,def){const k=G.U.filter(u=>u.side===att.side&&u.n>0&&dist(u,def)===1).length;return FLANK[Math.min(4,k)];}
+// 本陣（城格上的守軍）：依城防獲得1~5倍防守加成（只加防守，不加攻擊）
+function hqMult(G){return 1+4*clamp(G.def,0,100)/100;}
+const isHQ=(G,u)=>u.side==='d'&&G.t[u.y][u.x]==='c';
+function calcDmg(G,att,def,counter,melee){
+  const sA=Math.max(.25,(att.g.t*.6+att.g.w*.4)/100);
+  let d=att.n*0.28*sA*(0.5+att.train/200)*att.mor*rnd(.85,1.15);
+  const rm=ratioMult(att,def);d*=rm;
+  const fm=melee?flankMult(G,att,def):1;d*=fm;
+  if(counter)d*=0.6;
+  const ter=G.t[def.y][def.x];
+  if(ter==='f')d*=0.75;
+  let hq=1;
+  if(isHQ(G,def)){hq=hqMult(G);d/=hq;}
+  return {d:Math.min(def.n,Math.max(1,Math.round(d))),rm,fm,hq};
+}
+function dmgNote(rm,fm,ter,hq){const n=[];if(rm>1.01)n.push(`兵力×${rm.toFixed(1)}`);if(fm>1)n.push(`包圍×${fm}`);if(ter==='f')n.push('林地防守');if(hq>1.01)n.push(`本陣÷${hq.toFixed(1)}`);return n.length?`（${n.join('、')}）`:'';}
+function doAttack(G,att,def){
+  const r=calcDmg(G,att,def,false,true);def.n-=r.d;
+  const onHQ=isHQ(G,def);
+  if(onHQ)G.def=Math.max(0,G.def-ri(1,3));
+  let msg=`${att.g.name}攻擊${def.g.name}，敵損${r.d}${dmgNote(r.rm,r.fm,G.t[def.y][def.x],r.hq)}`;
+  if(def.n>0){
+    const c=calcDmg(G,def,att,true,true);att.n-=c.d;
+    msg+=`；反擊損${c.d}${dmgNote(c.rm,c.fm,G.t[att.y][att.x],c.hq)}`;sfx('clash');
+  }else{msg+=`，${def.g.name}隊潰滅`;sfx('destroy');}
+  return msg;
+}
+function doFire(G,att,def){
+  sfx('fire');
+  const ter=G.t[def.y][def.x];
+  const p=clamp(0.35+(att.g.z-def.g.z)/100*0.8+(ter==='f'?0.25:0),0.1,0.9);
+  if(Math.random()<p){
+    if(isHQ(G,def)){ // 火攻本陣：士兵不減，改為削減城防
+      const dd=Math.round((8+att.g.z/100*10)*rnd(.9,1.2));
+      G.def=Math.max(0,G.def-dd);
+      return `${att.g.name}火攻本陣！城防-${dd}（現${G.def}，本陣×${hqMult(G).toFixed(1)}）`;
+    }
+    const d=Math.min(def.n,Math.round(def.n*(0.18+0.18*att.g.z/100)*(ter==='f'?1.4:1)*rnd(.9,1.1)));
+    def.n-=d;return `${att.g.name}火計成功！${def.g.name}損${d}${def.n<=0?'，隊伍潰滅':''}`;
+  }
+  return `${att.g.name}火計失敗`;
+}
+function checkGrid(G){
+  if(G.done)return;
+  const A=G.U.filter(u=>u.side==='a'&&u.n>0),D=G.U.filter(u=>u.side==='d'&&u.n>0);
+  if(!D.length)G.done='win';
+  else if(!A.length)G.done='lose';
+  else if(A.some(u=>u.x===3&&u.y===0))G.done='win';
+  else if(G.turn>15)G.done='timeout';
+}
+function aiUnit(G,u){
+  const foes=G.U.filter(x=>x.side!==u.side&&x.n>0);if(!foes.length)return;
+  foes.sort((a,b)=>dist(u,a)-dist(u,b)||a.n-b.n);
+  const tgt=foes[0];
+  const anchor=u.side==='d'&&u.id==='d0';
+  const adjacent=foes.some(f=>dist(u,f)===1);
+  const allies=G.U.filter(a=>a.side===u.side&&a.n>0&&a!==u);
+  if(!anchor&&!adjacent&&!(u.side==='d'&&dist(u,tgt)>6)){
+    const r=reach(G,u),cityFree=!uAt(G,3,0),city={x:3,y:0};
+    const goal=(u.side==='a'&&cityFree&&dist(u,city)<=movOf(u)+3)?city:tgt;
+    let best=null,bs=1e9;
+    for(const key of Object.keys(r)){
+      const [x,y]=key.split(',').map(Number);
+      let s=Math.abs(x-goal.x)+Math.abs(y-goal.y)-(G.t[y][x]==='f'?0.3:0);
+      const adjF=foes.filter(f=>Math.abs(f.x-x)+Math.abs(f.y-y)===1);
+      if(adjF.length){const al=allies.filter(a=>adjF.some(f=>dist(a,f)===1)).length;s-=1.5+al*1.5;}
+      if(s<bs){bs=s;best=[x,y];}
+    }
+    if(best){u.x=best[0];u.y=best[1];u.moved=true;}
+  }
+  checkGrid(G);if(G.done)return;
+  const near=G.U.filter(x=>x.side!==u.side&&x.n>0);
+  const adj=near.filter(f=>dist(u,f)===1).sort((a,b)=>flankMult(G,u,b)-flankMult(G,u,a)||a.n-b.n);
+  const two=near.filter(f=>dist(u,f)===2);
+  const hqT=u.side==='a'?near.find(f=>isHQ(G,f)&&dist(u,f)<=2):null;
+  let msg=null;
+  if(hqT&&G.def>15&&u.g.z>=55&&Math.random()<0.65)msg=doFire(G,u,hqT);
+  else if(two.length&&u.g.z>=65&&Math.random()<0.4)msg=doFire(G,u,two.sort((a,b)=>a.n-b.n)[0]);
+  else if(adj.length){
+    if(u.g.z>=75&&Math.random()<0.2)msg=doFire(G,u,adj[0]);else msg=doAttack(G,u,adj[0]);
+  }
+  if(msg)G.log.push(msg);
+  u.acted=true;
+  checkGrid(G);
+}
+function endGridTurn(G){
+  const nA=G.U.filter(u=>u.side==='a'&&u.n>0).reduce((s,u)=>s+u.n,0);
+  G.food=Math.max(0,G.food-Math.ceil(nA/150));updateHunger(G);
+  G.turn++;
+  for(const u of G.U){u.acted=false;u.moved=false;}
+  checkGrid(G);
+}
+function finishGrid(G){
+  const b=G.b;
+  const att=G.U.filter(u=>u.side==='a'),def=G.U.filter(u=>u.side==='d');
+  b.a.n=att.reduce((s,u)=>s+Math.max(0,u.n),0);
+  b.d.n=def.reduce((s,u)=>s+Math.max(0,u.n),0);
+  b.d.def=G.def;b.fleft=G.food;
+  const living=[];
+  for(const u of att){
+    if(u.n>0)living.push(u.g);
+    else if(G.done!=='win'&&G.done!=='dretreat'&&!u.g.lord&&Math.random()<0.3){u.g.f=-2;u.g.capBy=b.d.f;u.g.c=b.to;}
+    else u.g.c=b.from;
+  }
+  b.a.gens=living;
+  if(G.done==='dretreat'){performRetreat(b,G.retreatTo,b.d.n);return;}
+  b.done=G.done;
+  b.txt=finishBattle(b);
+}
+function autoGrid(b){
+  const G=initGrid(b);
+  let guard=0;
+  while(!G.done&&guard++<40){
+    for(const u of G.U.filter(x=>x.side==='a'&&x.n>0)){if(G.done)break;aiUnit(G,u);}
+    if(G.done)break;
+    for(const u of G.U.filter(x=>x.side==='d'&&x.n>0)){if(G.done)break;aiUnit(G,u);}
+    if(G.done)break;
+    endGridTurn(G);
+  }
+  if(!G.done)G.done='timeout';
+  finishGrid(G);
+  return G;
+}
+
+/* ---- 電腦勢力 ---- */
+function aiAttack(c){
+  if(S.turn<3||c.troops<8000)return;
+  const free=freeGens(c.id).sort(byCombat);if(free.length<2)return;
+  const tg=ADJ[c.id].map(i=>S.cities[i]).filter(t=>t.f!==c.f&&!allied(c.f,t.f));if(!tg.length)return;
+  tg.sort((a,b)=>a.troops*(1+a.def/200)-b.troops*(1+b.def/200));const t=tg[0];
+  const send=Math.min(Math.floor(c.troops*0.8/100)*100,c.food*10);
+  if(send<t.troops*(1+t.def/200)*1.3)return;
+  if(Math.random()>0.4+(50-frOf(c.f,t.f))*0.003)return;
+  const gens=free.slice(0,free.length>=3?2:1);
+  const b=launch(c.id,t.id,gens,send);
+  if(S.interactive&&t.f===S.pf)pending.push(b);else autoBattle(b);
+}
+function aiDomestic(c){
+  for(const g of freeGens(c.id)){
+    const o=[];
+    if(c.loy<60&&c.gold>=100)o.push(['pac',3]);
+    if(c.troops<20000&&c.gold>=150&&c.pop>40000)o.push(['enl',c.troops<10000?5:2]);
+    if(c.train<75&&c.gold>=50)o.push(['trn',2]);
+    if(c.def<70&&c.gold>=150)o.push(['fort',1]);
+    if(c.farm<90&&c.gold>=100)o.push(['farm',2]);
+    if(c.comm<90&&c.gold>=100)o.push(['comm',2]);
+    const w=wanderers(c.id);if(w.length&&c.gold>=100)o.push(['rec',3]);
+    if(!o.length)break;
+    let r=Math.random()*o.reduce((s,x)=>s+x[1],0),k=o[0][0];
+    for(const x of o){r-=x[1];if(r<=0){k=x[0];break;}}
+    if(k==='pac')opPacify(c,g);else if(k==='enl')opEnlist(c,g);else if(k==='trn')opTrain(c,g);
+    else if(k==='fort')opFort(c,g);else if(k==='farm')opDevelop(c,g,'farm');else if(k==='comm')opDevelop(c,g,'comm');
+    else{const t=w.slice().sort((a,b)=>total5(b)-total5(a))[0];opRecruit(c,g,t,false);}
+  }
+}
+function aiTurn(f){
+  for(const c of shuffle(S.cities.filter(x=>x.f===f))){
+    if(c.f!==f)continue;
+    aiAttack(c);
+    if(c.f===f)aiDomestic(c);
+  }
+}
+
+/* ---- 月結算 ---- */
+function tick(){
+  for(const c of S.cities){
+    const lf=0.5+c.loy/200;
+    c.gold+=Math.round(c.pop/1000*(c.comm/100)*4*lf)-Math.round(c.troops*0.004);
+    c.food+=Math.round(c.pop/1000*(c.farm/100)*8*lf)-Math.round(c.troops*0.03);
+    if(c.gold<0)c.gold=0;
+    if(c.food<0){c.food=0;c.troops=Math.round(c.troops*0.9);c.loy=Math.max(0,c.loy-5);if(c.f===S.pf)rep(`${c.name}糧食耗盡，士兵逃散！`);}
+    if(c.loy<30&&Math.random()<0.1){c.troops=Math.round(c.troops*0.9);c.def=Math.max(0,c.def-5);if(c.f===S.pf)rep(`${c.name}民心動盪，發生叛亂！`);}
+    c.pop=clamp(Math.round(c.pop*(1+(c.loy-55)/8000)),10000,400000);
+    c.gold=Math.min(c.gold,99999);c.food=Math.min(c.food,99999);
+  }
+  for(const g of S.gens){
+    g.acted=false;
+    if(g.f<0||g.lord)continue;
+    if(g.loyal<90&&Math.random()<0.4)g.loyal++;
+    if(g.loyal<35&&Math.random()<(35-g.loyal)/60&&serving(g.c).length>1){
+      const of=g.f;g.f=-1;if(of===S.pf)rep(`${g.name}對我方失去忠誠，離開了${S.cities[g.c].name}`);
+    }
+  }
+  if(S.month%2===0)for(const g of S.gens){if(!g.hate)continue;for(const k of Object.keys(g.hate)){g.hate[k]=Math.max(0,g.hate[k]-1);if(!g.hate[k])delete g.hate[k];}}
+  for(const x of S.allies)addFr(x.a,x.b,1);
+  if(S.month%4===0&&S.fr)for(const k of Object.keys(S.fr)){const v=S.fr[k];S.fr[k]=v>50?v-1:v<50?v+1:v;}
+  for(const x of S.allies){x.m--;if(x.m<=0&&(x.a===S.pf||x.b===S.pf))rep(`與${fn(x.a===S.pf?x.b:x.a)}的同盟期滿`);}
+  S.allies=S.allies.filter(x=>x.m>0);
+  aiAlliances();
+  for(const c of S.cities)ensureOfficer(c);
+}
+function aiAlliances(){
+  if(Math.random()>0.05)return;
+  const alive=S.F.map((_,i)=>i).filter(f=>fcount(f)>0&&f!==S.pf);if(alive.length<2)return;
+  const a=alive[ri(0,alive.length-1)],nb=new Set();
+  for(const c of S.cities)if(c.f===a)for(const j of ADJ[c.id]){const o=S.cities[j].f;if(o!==a&&o!==S.pf&&fcount(o)>0&&!allied(a,o)&&frOf(a,o)>=55)nb.add(o);}
+  if(!nb.size)return;
+  const arr=[...nb];S.allies.push({a,b:arr[ri(0,arr.length-1)],m:12});
+}
+function events(){
+  if(Math.random()<0.08&&S.pool.length){
+    const row=S.pool.splice(ri(0,S.pool.length-1),1)[0],c=S.cities[ri(0,S.cities.length-1)];
+    S.gens.push(mkWander(row,c.id));rep(`聽說${row[0]}出現在${c.name}一帶`);
+  }
+  if(Math.random()>0.12)return;
+  const r=Math.random(),c=S.cities[ri(0,S.cities.length-1)],mine=c.f===S.pf;
+  if(r<0.4){c.farm=Math.max(10,c.farm-6);c.loy=Math.max(0,c.loy-5);if(mine)rep(`${c.name}發生天災，農業與民忠下降`);}
+  else if(r<0.75){c.food=Math.round(c.food*1.2);if(mine)rep(`${c.name}五穀豐登，糧食增加`);}
+  else{c.pop=Math.round(c.pop*0.95);c.loy=Math.max(0,c.loy-3);if(mine)rep(`${c.name}流行疫病，人口減少`);}
+}
+function advance(){S.month++;if(S.month>12){S.month=1;S.year++;}}
+function checkEnd(){
+  const mine=fcount(S.pf);
+  if(mine===S.cities.length)S.over='win';else if(mine===0)S.over='lose';else if(S.year>S.startYear+24)S.over='time';
+}
+// ==LOGIC_END==
+
+/* ================= UI ================= */
+const KEY='qxzl_save_v2';
+const $=s=>document.querySelector(s);
+let sel=null,toastT=null,sheetFn=null,sheetLock=false,zoomed=false,tScn=194,G=null,inFlow=false;
+const fmtNum=n=>n>=10000?(n/10000).toFixed(1).replace(/\.0$/,'')+'萬':String(n);
+const lab=k=>STATS.find(s=>s[0]===k)[1];
+function h(tag,attrs={},...kids){
+  const e=document.createElement(tag);
+  for(const[k,v]of Object.entries(attrs)){
+    if(k==='class')e.className=v;
+    else if(k.startsWith('on'))e[k]=v;
+    else if(v!==false&&v!=null)e.setAttribute(k,v===true?'':v);
+  }
+  for(const k of kids.flat()){if(k==null||k===false)continue;e.append(k.nodeType?k:document.createTextNode(k));}
+  return e;
+}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),2600);}
+function persist(){if(inFlow)return;try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function loadSave(){try{const t=localStorage.getItem(KEY);if(!t)return null;const s=JSON.parse(t);if(s&&s.cities&&s.gens&&s.F&&!s.over)return s;}catch(e){}return null;}
+function clearSave(){try{localStorage.removeItem(KEY);}catch(e){}}
+
+/* ---- 音樂與音效（Web Audio 合成：五聲音階古箏＋笛＋戰鼓） ---- */
+const Snd=(()=>{
+  let ctx=null,musicG=null,sfxG=null,noise=null,timer=null,nextT=0,step=0,idx=7,mode='map';
+  let prefs={};try{prefs=JSON.parse(localStorage.getItem('qxzl_audio'))||{};}catch(e){}
+  let musicOn=prefs.music!==false,sfxOn=prefs.sfx!==false;
+  const save=()=>{try{localStorage.setItem('qxzl_audio',JSON.stringify({music:musicOn,sfx:sfxOn}));}catch(e){}};
+  const SC=[0,2,4,7,9]; // D 宮商角徵羽
+  const freq=i=>146.83*Math.pow(2,(Math.floor(i/5)*12+SC[((i%5)+5)%5])/12);
+  function init(){
+    if(ctx)return;
+    const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;
+    ctx=new AC();
+    const master=ctx.createGain();master.gain.value=0.9;master.connect(ctx.destination);
+    musicG=ctx.createGain();musicG.gain.value=0.5;musicG.connect(master);
+    sfxG=ctx.createGain();sfxG.gain.value=0.8;sfxG.connect(master);
+    noise=ctx.createBuffer(1,ctx.sampleRate,ctx.sampleRate);
+    const d=noise.getChannelData(0);for(let i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+  }
+  function pluck(f,t,dur,vol,out){
+    const o=ctx.createOscillator(),o2=ctx.createOscillator(),g=ctx.createGain(),g2=ctx.createGain(),lp=ctx.createBiquadFilter();
+    o.type='triangle';o2.type='sine';
+    o.frequency.setValueAtTime(f*1.012,t);o.frequency.exponentialRampToValueAtTime(f,t+0.05);o2.frequency.value=f*2;
+    lp.type='lowpass';lp.frequency.value=Math.min(6000,f*7);g2.gain.value=0.25;
+    g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(vol,t+0.008);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(lp);o2.connect(g2);g2.connect(lp);lp.connect(g);g.connect(out||musicG);
+    o.start(t);o2.start(t);o.stop(t+dur+0.05);o2.stop(t+dur+0.05);
+  }
+  function flute(f,t,dur,vol){
+    const o=ctx.createOscillator(),g=ctx.createGain(),lfo=ctx.createOscillator(),lg=ctx.createGain();
+    o.type='sine';o.frequency.value=f;lfo.frequency.value=5.2;lg.gain.value=f*0.008;lfo.connect(lg);lg.connect(o.frequency);
+    g.gain.setValueAtTime(0.0001,t);g.gain.linearRampToValueAtTime(vol,t+0.12);g.gain.setValueAtTime(vol,t+dur*0.7);g.gain.linearRampToValueAtTime(0.0001,t+dur);
+    o.connect(g);g.connect(musicG);o.start(t);lfo.start(t);o.stop(t+dur+0.05);lfo.stop(t+dur+0.05);
+  }
+  function burst(t,dur,fq,vol,out,type){
+    const s=ctx.createBufferSource();s.buffer=noise;
+    const f=ctx.createBiquadFilter();f.type=type||'bandpass';f.frequency.value=fq;f.Q.value=1;
+    const g=ctx.createGain();g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    s.connect(f);f.connect(g);g.connect(out||sfxG);s.start(t);s.stop(t+dur+0.02);
+  }
+  function thump(t,f0,f1,dur,vol,out){
+    const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';
+    o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(f1,t+dur);
+    g.gain.setValueAtTime(vol,t);g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g);g.connect(out||sfxG);o.start(t);o.stop(t+dur+0.02);
+  }
+  const eighth=()=>mode==='battle'?0.25:0.42;
+  function sched(s,t){
+    if(mode==='battle'){
+      if(s%2===0)thump(t,150,45,0.28,s%8===0?0.9:0.6,musicG);
+      if(s%4===3)burst(t,0.08,2200,0.25,musicG);
+      const motif=[0,0,2,0,4,3,2,0];
+      if(s%2===0||Math.random()<0.35)pluck(freq(5+motif[(s>>1)%8]),t,0.35,0.2);
+      if(s%16===0)pluck(freq(0),t,1.5,0.25);
+      return;
+    }
+    if(s%16===0){pluck(freq(-5),t,3.2,0.16);pluck(freq(-2),t+0.01,3.2,0.1);}
+    if(s%8===0){idx=clamp(idx+ri(-2,2),4,13);pluck(freq(idx),t,1.6,0.2);}
+    else if(Math.random()<0.5){idx=clamp(idx+(Math.random()<0.5?-1:1)*ri(1,2),4,13);pluck(freq(idx),t,1.2,0.14);}
+    if(s%32===24)flute(freq(clamp(idx,6,11)),t,2.4,0.1);
+  }
+  function loop(){if(!ctx||!musicOn)return;while(nextT<ctx.currentTime+0.35){sched(step,nextT);nextT+=eighth();step++;}}
+  function start(){if(!ctx||!musicOn||timer)return;nextT=ctx.currentTime+0.1;step=0;timer=setInterval(loop,120);}
+  function stop(){if(timer){clearInterval(timer);timer=null;}}
+  const SFX={
+    click(t){pluck(1200,t,0.05,0.08,sfxG);},
+    step(t){thump(t,300,160,0.07,0.25);},
+    ok(t){pluck(freq(10),t,0.5,0.2,sfxG);pluck(freq(12),t+0.09,0.6,0.2,sfxG);},
+    coin(t){pluck(1318,t,0.35,0.18,sfxG);pluck(1760,t+0.07,0.5,0.18,sfxG);},
+    err(t){thump(t,190,110,0.2,0.5);thump(t+0.12,160,90,0.22,0.5);},
+    recruit(t){[10,12,14].forEach((i,k)=>pluck(freq(i),t+k*0.09,0.9,0.2,sfxG));},
+    clash(t){burst(t,0.14,1800,0.5);thump(t,200,70,0.18,0.5);},
+    fire(t){burst(t,0.7,900,0.5,undefined,'lowpass');burst(t+0.1,0.5,2500,0.25);},
+    destroy(t){burst(t,0.3,500,0.5);thump(t,160,40,0.4,0.7);},
+    drum(t){thump(t,140,45,0.3,0.9);thump(t+0.2,140,45,0.3,0.9);thump(t+0.4,120,40,0.45,1);},
+    gong(t){[196,293.7,392,523].forEach((f,k)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f*(k?1.003:1);
+      g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(0.25/(k+1),t+0.01);g.gain.exponentialRampToValueAtTime(0.0001,t+2.2);
+      o.connect(g);g.connect(sfxG);o.start(t);o.stop(t+2.3);});},
+    win(t){[5,7,9,10,12,14].forEach((i,k)=>pluck(freq(i),t+k*0.13,0.9,0.22,sfxG));},
+    lose(t){[10,9,7,5,2].forEach((i,k)=>pluck(freq(i),t+k*0.28,1.2,0.2,sfxG));}
+  };
+  return {
+    unlock(){init();if(!ctx)return;if(ctx.state==='suspended')ctx.resume();if(musicOn)start();},
+    play(n){if(!ctx||!sfxOn||!SFX[n])return;try{SFX[n](ctx.currentTime);}catch(e){}},
+    setMode(m){mode=m;step=0;},
+    toggleMusic(){musicOn=!musicOn;save();if(musicOn){init();start();}else stop();return musicOn;},
+    toggleSfx(){sfxOn=!sfxOn;save();return sfxOn;},
+    music:()=>musicOn,sfx:()=>sfxOn,
+    suspend(){if(ctx)ctx.suspend();},resume(){if(ctx)ctx.resume();}
+  };
+})();
+window.Snd=Snd;
+document.addEventListener('click',e=>{Snd.unlock();const b=e.target&&e.target.closest&&e.target.closest('button');if(b&&!b.disabled)Snd.play('click');});
+document.addEventListener('pointerdown',()=>Snd.unlock());
+document.addEventListener('visibilitychange',()=>{if(document.hidden)Snd.suspend();else Snd.resume();});
+function syncAudio(){$('#btnMusic').textContent='音樂：'+(Snd.music()?'開':'關');$('#btnSfx').textContent='音效：'+(Snd.sfx()?'開':'關');}
+$('#btnMusic').onclick=()=>{Snd.toggleMusic();syncAudio();};
+$('#btnSfx').onclick=()=>{Snd.toggleSfx();syncAudio();};
+
+/* sheet */
+function openSheet(title,fn2,lock){
+  sheetFn=fn2;sheetLock=!!lock;
+  $('#sheetTitle').textContent=title;$('#sheetX').hidden=!!lock;
+  $('#sheetBody').replaceChildren(fn2());$('#sheet').hidden=false;$('#sheet .card').scrollTop=0;
+}
+function rerenderSheet(){if(sheetFn)$('#sheetBody').replaceChildren(sheetFn());}
+function closeSheet(){$('#sheet').hidden=true;sheetFn=null;}
+$('#sheetX').onclick=closeSheet;
+$('#sheetBack').onclick=()=>{if(!sheetLock)closeSheet();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#sheet').hidden&&!sheetLock)closeSheet();});
+
+/* render */
+function renderTop(){
+  $('#date').textContent=`${S.year}年${S.month}月`;
+  $('#who').replaceChildren(h('i',{style:`background:${fc(S.pf)}`}),`${fn(S.pf)}軍・領${fcount(S.pf)}／${S.cities.length}城`);
+}
+function renderMap(){
+  let s=`<path class="land" d="M8 14 L28 8 L56 4 L82 2 L98 12 L99 42 L98 66 L99 94 L84 102 L60 104 L40 104 L18 102 L4 96 L2 70 L4 44 L2 26 Z"/>`;
+  s+=`<path class="river" d="M4 26 C20 22 28 34 40 32 S60 36 70 28 S88 24 99 20"/><text class="rv" x="8" y="22">黃河</text>`;
+  s+=`<path class="river" d="M4 76 C18 70 30 76 44 71 S66 72 78 71 S92 70 99 66"/><text class="rv" x="86" y="64">長江</text>`;
+  for(const[a,b]of EDGES){const A=S.cities[a],B=S.cities[b];s+=`<line class="link${sel!=null&&(sel===a||sel===b)?' on':''}" x1="${A.x}" y1="${A.y}" x2="${B.x}" y2="${B.y}"/>`;}
+  for(const c of S.cities){
+    const ally=c.f!==S.pf&&allied(S.pf,c.f);
+    s+=`<g class="city" data-c="${c.id}" tabindex="0" role="button" aria-label="${c.name}，${fn(c.f)}軍，兵力${c.troops}">`
+      +`<circle class="hit" cx="${c.x}" cy="${c.y}" r="6"/>`
+      +(sel===c.id?`<circle class="ring" cx="${c.x}" cy="${c.y}" r="5"/>`:'')
+      +`<circle class="dot" cx="${c.x}" cy="${c.y}" r="3.2" fill="${fc(c.f)}"/>`
+      +(c.f===S.pf?`<circle class="mine" cx="${c.x}" cy="${c.y}" r="1"/>`:'')
+      +`<text class="cn" x="${c.x}" y="${c.y+7.2}">${c.name}</text><text class="ct" x="${c.x}" y="${c.y+10.2}">${fmtNum(c.troops)}${ally?'盟':''}</text></g>`;
+  }
+  $('#map').innerHTML=s;
+}
+function meter(l,v){return h('div',{class:'meter'},h('span',{},l),h('div',{class:'bar'},h('i',{style:`width:${clamp(v,0,100)}%`})),h('span',{class:'v'},v));}
+function genRow(g,mine){
+  const st=STATS.map(([k,l])=>l+g[k]).join(' ')+(mine&&!g.lord?` 忠${g.loyal}`:'')+(!mine&&hateOf(g,S.pf)?` 仇${hateOf(g,S.pf)}`:'');
+  return h('div',{class:'gen'+(mine&&g.acted?' done':'')},h('b',{},g.name+(g.lord?'（主）':'')),h('span',{class:'gs'},st));
+}
+function enemyNeighbors(c){return ADJ[c.id].map(i=>S.cities[i]).filter(t=>t.f!==c.f);}
+function sowTargets(c){
+  const out=[];
+  for(const t of enemyNeighbors(c))for(const g of serving(t.id))if(!g.lord)out.push({g,city:t});
+  return out;
+}
+function ownWanderers(){return S.gens.filter(g=>g.f===-1&&g.c>=0&&S.cities[g.c].f===S.pf);}
+function otherFactions(){return S.F.map((_,i)=>i).filter(f=>f!==S.pf&&fcount(f)>0);}
+function renderPanel(){
+  const p=$('#panel');p.replaceChildren();
+  if(sel==null){p.append(h('p',{class:'hint'},'點選地圖上的城池，查看狀況並下達指令。'));return;}
+  const c=S.cities[sel],mine=c.f===S.pf;
+  const stat=(l,v)=>h('div',{},h('dt',{},l),h('dd',{},v));
+  p.append(
+    h('div',{class:'phead'},h('span',{class:'dot',style:`background:${fc(c.f)}`}),h('h2',{},c.name),h('span',{class:'owner'},`${fn(c.f)}軍${!mine&&allied(S.pf,c.f)?'（同盟）':''}${!mine?`　友好${frOf(S.pf,c.f)}`:''}`)),
+    h('dl',{class:'stats'},stat('人口',fmtNum(c.pop)),stat('兵力',fmtNum(c.troops)),stat('金',fmtNum(c.gold)),stat('糧',fmtNum(c.food))),
+    meter('民忠',c.loy),meter('農業',c.farm),meter('商業',c.comm),meter('城防',c.def),meter('訓練',c.train)
+  );
+  const gens=serving(c.id);
+  if(mine){
+    const free=gens.filter(g=>!g.acted);
+    const noG=free.length===0;
+    const en=enemyNeighbors(c);
+    const cmd=(label,sub,kind,dis)=>h('button',{class:'cmd',disabled:dis,onclick:()=>doCmd(kind)},h('span',{},label),h('small',{},sub));
+    p.append(h('div',{class:'cap'},'內政'),
+      h('div',{class:'cmds'},cmd('開墾','金100','farm',noG||c.gold<100),cmd('商業','金100','comm',noG||c.gold<100),cmd('築城','金150','fort',noG||c.gold<150),cmd('安民','金100','pac',noG||c.gold<100)),
+      h('div',{class:'cap'},'軍事'),
+      h('div',{class:'cmds'},cmd('徵兵','金150','enl',noG||c.gold<150),cmd('訓練','金50','trn',noG||c.gold<50),
+        cmd('出兵','攻鄰城','atk',free.length<2||c.troops<1000||!en.length),
+        cmd('輸送','兵金糧','mov',noG||!ADJ[c.id].some(i=>S.cities[i].f===c.f))),
+      h('div',{class:'cap'},'人事'),
+      h('div',{class:'cmds'},cmd('登用',`領內在野${ownWanderers().length}`,'rec',noG||c.gold<100||!ownWanderers().length),
+        cmd('俘虜',`${captivesOf(c.id).length}人`,'cap',!captivesOf(c.id).length),
+        cmd('褒賞','金200','rew',c.gold<200||!gens.some(g=>!g.lord)),
+        cmd('調動','他城','xfer',noG||gens.length<2||!S.cities.some(t=>t.f===c.f&&t.id!==c.id))),
+      h('div',{class:'cap'},'計策'),
+      h('div',{class:'cmds'},cmd('離間','金200','sow',noG||c.gold<200||!sowTargets(c).length),
+        cmd('煽動','金100','rum',noG||c.gold<100||!en.length),
+        cmd('外交','金300','dip',!otherFactions().length))
+    );
+    if(noG)p.append(h('p',{class:'note'},'本月武將都已行動，結束本月後恢復。'));
+  }else{
+    const from=ADJ[c.id].map(i=>S.cities[i]).filter(x=>x.f===S.pf);
+    p.append(h('div',{class:'cap'},'出兵'));
+    if(!from.length)p.append(h('p',{class:'note'},'這座城沒有與你的城池相鄰。'));
+    for(const a of from){
+      const ok=freeGens(a.id).length>=2&&a.troops>=500;
+      p.append(h('button',{class:'ghost',style:'width:100%;margin-bottom:6px',disabled:!ok,onclick:()=>startAttack(a.id,c.id)},`從${a.name}出兵${ok?'':'（需2名以上可行動武將）'}`));
+    }
+  }
+  p.append(h('div',{class:'cap'},mine?'在城武將':'守城武將'),...gens.map(g=>genRow(g,mine)));
+  if(!mine){const w=wanderers(c.id);if(w.length)p.append(h('p',{class:'note'},`在野：${w.map(g=>g.name).join('、')}`));}
+}
+function refresh(){renderTop();renderMap();renderPanel();persist();}
+function pickCity(i){sel=i;renderMap();renderPanel();}
+$('#map').addEventListener('click',e=>{const g=e.target.closest('[data-c]');if(g)pickCity(+g.dataset.c);});
+$('#map').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){const g=e.target.closest('[data-c]');if(g){e.preventDefault();pickCity(+g.dataset.c);const n=document.querySelector(`#map [data-c="${sel}"]`);if(n)n.focus();}}});
+$('#btnZoom').onclick=()=>{zoomed=!zoomed;$('#map').classList.toggle('zoom',zoomed);$('#btnZoom').textContent=zoomed?'縮小地圖':'放大地圖';};
+
+/* commands */
+function pickGeneral(cid,o){
+  const free=freeGens(cid).sort((a,b)=>b[o.stat]-a[o.stat]);
+  if(!free.length){toast('沒有可行動的武將');return;}
+  openSheet(`${o.title}：選擇武將`,()=>h('div',{class:'list'},free.map(g=>h('button',{class:'row',onclick:()=>{closeSheet();o.onPick(g);}},h('b',{},g.name),h('span',{class:'gs'},`${lab(o.stat)}${g[o.stat]}`),h('small',{},o.hint?o.hint(g):'')))));
+}
+function doCmd(kind){
+  const c=S.cities[sel];
+  const need=n=>{if(c.gold<n){sfx('err');toast(`金不足（需要${n}）`);return false;}return true;};
+  const done=m=>{sfx('coin');toast(m);refresh();};
+  if(kind==='farm'||kind==='comm'){if(!need(100))return;
+    pickGeneral(c.id,{title:kind==='farm'?'開墾':'商業',stat:'p',hint:g=>`預計+${Math.round(3+g.p/100*8)}`,onPick:g=>done(opDevelop(c,g,kind))});}
+  else if(kind==='fort'){if(!need(150))return;pickGeneral(c.id,{title:'築城',stat:'p',hint:g=>`預計城防+${Math.round(3+(g.p+g.t)/200*6)}`,onPick:g=>done(opFort(c,g))});}
+  else if(kind==='pac'){if(!need(100))return;pickGeneral(c.id,{title:'安民',stat:'m',hint:g=>`預計民忠+${Math.round(5+g.m/100*8)}`,onPick:g=>done(opPacify(c,g))});}
+  else if(kind==='trn'){if(!need(50))return;pickGeneral(c.id,{title:'訓練',stat:'t',hint:g=>`預計訓練+${Math.round(4+g.t/100*8)}`,onPick:g=>done(opTrain(c,g))});}
+  else if(kind==='enl'){if(!need(150))return;if(c.pop<20000)return toast('人口不足，無法徵兵');
+    pickGeneral(c.id,{title:'徵兵',stat:'m',hint:g=>`約${enlistAmt(g)}人，民忠-3`,onPick:g=>done(opEnlist(c,g))});}
+  else if(kind==='rec')cmdRecruit(c);
+  else if(kind==='cap')cmdCaptives(c);
+  else if(kind==='rew')cmdReward(c);
+  else if(kind==='mov')cmdMove(c);
+  else if(kind==='sow')cmdSow(c);
+  else if(kind==='rum')cmdRumor(c);
+  else if(kind==='dip')cmdDiplo(c);
+  else if(kind==='xfer')cmdTransfer(c);
+  else if(kind==='atk'){
+    const ts=enemyNeighbors(c);
+    openSheet('選擇進攻目標',()=>h('div',{class:'list'},ts.map(t=>h('button',{class:'row',onclick:()=>{closeSheet();startAttack(c.id,t.id);}},h('b',{},t.name),h('span',{class:'gs'},`${fn(t.f)}軍${allied(S.pf,t.f)?'（同盟）':''}　兵${fmtNum(t.troops)}　城防${t.def}`)))));
+  }
+}
+function cmdRecruit(c){
+  const ws=ownWanderers().sort((a,b)=>total5(b)-total5(a));
+  openSheet('登用在野武將（領內任一城）',()=>h('div',{class:'list'},ws.map(t=>h('button',{class:'row',onclick:()=>targetSheet(c,t,false)},
+    h('b',{},t.name),h('span',{class:'gs'},STATS.map(([k,l])=>l+t[k]).join(' ')+(hateOf(t,c.f)?` 仇${hateOf(t,c.f)}`:'')),
+    h('small',{},`在${S.cities[t.c].name}${t.c===c.id?'（本城）':''}`)))));
+}
+function targetSheet(c,t,captive){
+  openSheet(`${captive?'勸降':'登用'}${t.name}`,()=>{
+    const hh=hateOf(t,c.f);
+    return h('div',{},
+      h('p',{},`${t.name}　${STATS.map(([k,l])=>l+t[k]).join(' ')}`),
+      h('p',{},`對我方仇恨 ${hh}：${hh>=60?'敵意很深':hh>=30?'心存芥蒂':hh>0?'略有嫌隙':'沒有敵意'}（越高越難說服）`),
+      h('div',{class:'cap'},'贈禮降低仇恨（金200降10、500降25、1000降50）'),
+      h('div',{class:'btnrow'},[200,500,1000].map(n=>h('button',{class:'ghost',disabled:c.gold<n||!hh,onclick:()=>{sfx('coin');toast(opGift(c,t,n));refresh();rerenderSheet();}},`金${n}`))),
+      h('p',{class:'note'},`目前金${fmtNum(c.gold)}。遊說（無論成敗）也會小幅降低仇恨；對同一個人失敗越多次，下次成功率越高${(t.rf&&t.rf[c.f])?`（已累積${t.rf[c.f]}次）`:''}。`),
+      h('div',{class:'btnrow'},h('button',{class:'primary',disabled:!freeGens(c.id).length||(!captive&&c.gold<100),onclick:()=>{closeSheet();
+        pickGeneral(c.id,{title:`${captive?'勸降':'登用'}${t.name}`,stat:'m',hint:g=>`成功率約${Math.round(recruitChance(g,t,captive,c.f)*100)}%${captive?'':'，花費金100'}`,
+          onPick:g=>{const r=opRecruit(c,g,t,captive);sfx(r.ok?'recruit':'err');toast(r.msg);refresh();}});}},'遊說（由武將出面）')));
+  });
+}
+function cmdCaptives(c){
+  openSheet('處理俘虜',()=>{
+    const cs=captivesOf(c.id);
+    if(!cs.length){setTimeout(closeSheet,0);return h('p',{},'沒有俘虜。');}
+    return h('div',{},cs.map(t=>h('div',{class:'cap-row'},genRow(t,false),
+      h('div',{class:'btnrow'},
+        h('button',{class:'ghost',disabled:t.lord,onclick:()=>targetSheet(c,t,true)},t.lord?'不可登用':'登用'),
+        h('button',{class:'ghost',onclick:()=>{S.gens.splice(S.gens.indexOf(t),1);toast(`處斬了${t.name}`);refresh();rerenderSheet();}},'處斬'),
+        h('button',{class:'ghost',onclick:()=>{t.f=-1;toast(`釋放了${t.name}`);refresh();rerenderSheet();}},'釋放')))));
+  });
+}
+function cmdReward(c){
+  openSheet('褒賞武將（金200，忠誠+12）',()=>h('div',{class:'list'},serving(c.id).filter(g=>!g.lord).map(g=>h('button',{class:'row',disabled:c.gold<200,onclick:()=>{toast(opReward(c,g));refresh();rerenderSheet();}},
+    h('b',{},g.name),h('span',{class:'gs'},`忠誠${g.loyal}`),h('small',{},STATS.map(([k,l])=>l+g[k]).join(' '))))));
+}
+function cmdSow(c){
+  const ts=sowTargets(c).sort((a,b)=>a.g.loyal-b.g.loyal);
+  openSheet('離間：選擇對象（金200）',()=>h('div',{class:'list'},ts.map(({g:t,city})=>h('button',{class:'row',onclick:()=>{closeSheet();
+    pickGeneral(c.id,{title:`離間${t.name}`,stat:'z',hint:g=>`成功率約${Math.round(sowChance(g,t)*100)}%`,onPick:g=>{const r=opSow(c,g,t);toast(r.msg);refresh();}});}},
+    h('b',{},t.name),h('span',{class:'gs'},`${city.name}・${fn(city.f)}軍　忠${t.loyal}${hateOf(t,c.f)?`　仇${hateOf(t,c.f)}`:''}`),h('small',{},STATS.map(([k,l])=>l+t[k]).join(' '))))));
+}
+function cmdRumor(c){
+  const ts=enemyNeighbors(c);
+  openSheet('煽動：選擇城池（金100）',()=>h('div',{class:'list'},ts.map(t=>h('button',{class:'row',onclick:()=>{closeSheet();
+    pickGeneral(c.id,{title:`煽動${t.name}`,stat:'z',hint:g=>`成功率約${Math.round(rumorChance(g)*100)}%，民忠-10~20`,onPick:g=>{const r=opRumor(c,g,t);toast(r.msg);refresh();}});}},
+    h('b',{},t.name),h('span',{class:'gs'},`${fn(t.f)}軍　民忠${t.loy}`)))));
+}
+function cmdDiplo(c){
+  openSheet('外交',()=>{
+    const fs=otherFactions();
+    return h('div',{},
+      h('p',{class:'note'},'結盟12個月（金300）。兩國友好度越高越容易成功（每點約±0.6%）；外交（無論成敗）與贈禮會提高友好度，交戰與計策會降低友好度。'),
+      ...fs.map(f=>{
+        const fr=frOf(c.f,f),al=S.allies.find(x=>(x.a===S.pf&&x.b===f)||(x.b===S.pf&&x.a===f));
+        const head=h('div',{class:'gen'},h('b',{},`${fn(f)}軍${al?'（同盟）':''}`),h('span',{class:'gs'},`${fcount(f)}城　兵${fmtNum(troopsOf(f))}　友好${fr}`));
+        const btns=al?[h('button',{class:'ghost',onclick:()=>{S.allies=S.allies.filter(y=>y!==al);addFr(c.f,f,-15);toast(`破棄了與${fn(f)}的同盟（友好度-15）`);refresh();rerenderSheet();}},`破棄同盟（剩${al.m}個月）`)]
+          :[h('button',{class:'primary',disabled:c.gold<300||!freeGens(c.id).length,onclick:()=>{closeSheet();
+              pickGeneral(c.id,{title:`與${fn(f)}結盟`,stat:'m',hint:g=>`成功率約${Math.round(allyChance(g,f,c.f)*100)}%`,onPick:g=>{const r=opAlly(c,g,f);sfx(r.ok?'ok':'err');toast(r.msg);refresh();}});}},'結盟 金300'),
+            ...[200,500].map(n=>h('button',{class:'ghost',disabled:c.gold<n||fr>=100,onclick:()=>{sfx('coin');toast(opGiftFaction(c,f,n));refresh();rerenderSheet();}},`贈禮${n}`))];
+        return h('div',{class:'cap-row'},head,h('div',{class:'btnrow'},btns));
+      }));
+  });
+}
+function cmdTransfer(c){
+  const dests=S.cities.filter(t=>t.f===c.f&&t.id!==c.id);
+  openSheet('調動武將：選擇目的地',()=>h('div',{class:'list'},dests.map(t=>h('button',{class:'row',onclick:()=>transferSheet(c,t)},h('b',{},t.name),h('span',{class:'gs'},`武將${serving(t.id).length}人　兵${fmtNum(t.troops)}`)))));
+}
+function transferSheet(c,t){
+  const free=freeGens(c.id).sort(byCombat);
+  const maxMove=Math.min(serving(c.id).length-1,free.length);
+  const picks=[];
+  openSheet(`調動到${t.name}`,()=>h('div',{},
+    h('p',{class:'note'},`選擇要前往的武將（${c.name}至少留1人，最多${maxMove}人）。抵達後這些武將本月不能再行動。`),
+    h('div',{class:'list'},free.map(g=>h('button',{class:'row'+(picks.includes(g.id)?' on':''),onclick:()=>{
+      const i=picks.indexOf(g.id);
+      if(i>=0)picks.splice(i,1);else if(picks.length<maxMove)picks.push(g.id);else toast(`${c.name}至少要留1名武將`);
+      rerenderSheet();}},h('b',{},g.name),h('span',{class:'gs'},STATS.map(([k,l])=>l+g[k]).join(' ')),h('small',{},picks.includes(g.id)?'前往':'留守')))),
+    h('div',{class:'btnrow'},h('button',{class:'primary',disabled:!picks.length,onclick:()=>{
+      const gs=picks.map(id=>S.gens.find(g=>g.id===id));
+      for(const g of gs){g.c=t.id;g.acted=true;}
+      closeSheet();sfx('ok');toast(`${gs.map(g=>g.name).join('、')}前往${t.name}`);refresh();
+    }},'調動'))));
+}
+function cmdMove(c){
+  const ts=ADJ[c.id].map(i=>S.cities[i]).filter(t=>t.f===c.f);
+  openSheet('輸送物資',()=>h('div',{class:'list'},ts.map(t=>h('button',{class:'row',onclick:()=>moveSheet(c,t)},h('b',{},t.name),h('span',{class:'gs'},`兵${fmtNum(t.troops)}　金${fmtNum(t.gold)}　糧${fmtNum(t.food)}`)))));
+}
+function moveSheet(c,t){
+  const q={troops:0,gold:0,food:0};
+  const lim={troops:c.troops,gold:c.gold,food:c.food};
+  const lbl={troops:'兵',gold:'金',food:'糧'},stp={troops:1000,gold:500,food:500};
+  openSheet(`輸送到${t.name}`,()=>h('div',{},
+    ...Object.keys(q).map(k=>h('div',{class:'step'},h('span',{},lbl[k]),h('output',{},fmtNum(q[k])),
+      h('button',{onclick:()=>{q[k]=Math.max(0,q[k]-stp[k]);rerenderSheet();}},'−'),
+      h('button',{onclick:()=>{q[k]=Math.min(lim[k],q[k]+stp[k]);rerenderSheet();}},'＋'))),
+    h('p',{class:'note'},'每次調整1000兵或500金糧。會自動指派一名武將負責。'),
+    h('div',{class:'btnrow'},h('button',{class:'primary',onclick:()=>{
+      if(!q.troops&&!q.gold&&!q.food)return toast('請先選擇輸送數量');
+      const free=freeGens(c.id).sort((a,b)=>total5(a)-total5(b));
+      if(!free.length)return toast('沒有可行動的武將');
+      free[0].acted=true;
+      c.troops-=q.troops;t.troops+=q.troops;c.gold-=q.gold;t.gold+=q.gold;c.food-=q.food;t.food+=q.food;
+      closeSheet();toast(`${free[0].name}完成輸送`);refresh();
+    }},'輸送'))));
+}
+
+/* attack */
+function splitAlloc(total,k){const base=Math.floor(total/k/500)*500;const a=new Array(k).fill(base);a[0]+=total-base*k;return a;}
+function startAttack(from,to){
+  const A=S.cities[from],D=S.cities[to];
+  if(allied(S.pf,D.f)){sfx('err');return toast(`與${fn(D.f)}同盟中，請先在「外交」破棄同盟`);}
+  const pool=freeGens(from).sort(byCombat);
+  if(pool.length<2){sfx('err');return toast('出兵需要至少2名可行動武將（城中須留1人）');}
+  if(A.troops<500){sfx('err');return toast('兵力不足，無法出兵');}
+  const maxG=Math.min(5,pool.length-1);
+  const capT=Math.floor(A.troops/500)*500;
+  const st={picks:[pool[0].id],total:Math.max(500,Math.min(capT,Math.floor(A.troops*0.8/500)*500)),food:null,alloc:[]};
+  const foodNow=()=>st.food==null?Math.min(A.food,Math.ceil(st.total/10/500)*500):Math.min(st.food,A.food);
+  const go=manual=>{
+    const gs=st.picks.map(id=>S.gens.find(g=>g.id===id));
+    const fd=foodNow();
+    closeSheet();
+    const b=launch(from,to,gs,st.total,fd,st.alloc.slice());
+    sfx('drum');
+    if(manual)startGrid(b);else{autoRun(b);showBattleResult(b);}
+  };
+  const step2=()=>openSheet('③ 分配各武將兵力',()=>{
+    const gs=st.picks.map(id=>S.gens.find(g=>g.id===id));
+    const left=st.total-st.alloc.reduce((a,b)=>a+b,0);
+    const ok=left===0&&st.alloc.every(n=>n>=500);
+    return h('div',{},
+      h('p',{class:'note'},'兵力較多的一隊攻擊力較高（每多一倍×1.2）。兩隊以上同時圍住一支敵軍可協同攻擊（2隊×2、3隊×4、4隊×6）；敵人在林地則較難攻破。'),
+      h('p',{},`攜帶兵力${fmtNum(st.total)}　未分配`,h('b',{},fmtNum(left))),
+      ...gs.map((g,i)=>h('div',{class:'step w'},h('span',{},g.name+(i===0?'（主）':'')),h('output',{},fmtNum(st.alloc[i])),
+        h('button',{onclick:()=>{if(st.alloc[i]>=1000){st.alloc[i]-=500;rerenderSheet();}}},'−'),
+        h('button',{onclick:()=>{if(left>=500){st.alloc[i]+=500;rerenderSheet();}}},'＋'))),
+      h('div',{class:'btnrow'},h('button',{class:'ghost',onclick:()=>{st.alloc=splitAlloc(st.total,st.picks.length);rerenderSheet();}},'平均分配'),h('button',{class:'ghost',onclick:()=>step1()},'返回編成')),
+      h('div',{class:'btnrow'},h('button',{class:'primary',disabled:!ok,onclick:()=>go(true)},'親自指揮'),h('button',{class:'ghost',disabled:!ok,onclick:()=>go(false)},'自動戰鬥')));
+  });
+  const step1=()=>openSheet(`進攻${D.name}：編成`,()=>h('div',{},
+    h('p',{},`目標：${fn(D.f)}軍　兵${fmtNum(D.troops)}　城防${D.def}　民忠${D.loy}`),
+    h('div',{class:'cap'},`① 勾選出陣武將（最多${maxG}人，先選者為主將）`),
+    h('div',{class:'list'},pool.map(g=>h('button',{class:'row'+(st.picks.includes(g.id)?' on':''),onclick:()=>{
+      const i=st.picks.indexOf(g.id);
+      if(i>=0){if(st.picks.length>1)st.picks.splice(i,1);}
+      else if(st.picks.length>=maxG)toast(`最多${maxG}人`);
+      else if(capT<500*(st.picks.length+1))toast('兵力不足以多派一人');
+      else st.picks.push(g.id);
+      st.total=Math.max(st.total,500*st.picks.length);rerenderSheet();}},
+      h('b',{},g.name),h('span',{class:'gs'},STATS.map(([k,l])=>l+g[k]).join(' ')),
+      h('small',{},st.picks[0]===g.id?'主將':st.picks.includes(g.id)?'副將':'')))),
+    h('div',{class:'cap'},'② 攜帶兵力與糧食'),
+    h('div',{class:'step'},h('span',{},'兵'),h('output',{},fmtNum(st.total)),
+      h('button',{onclick:()=>{st.total=Math.max(500*st.picks.length,st.total-500);rerenderSheet();}},'−'),
+      h('button',{onclick:()=>{st.total=Math.min(capT,st.total+500);rerenderSheet();}},'＋')),
+    h('div',{class:'step'},h('span',{},'糧'),h('output',{},fmtNum(foodNow())),
+      h('button',{onclick:()=>{st.food=Math.max(0,foodNow()-500);rerenderSheet();}},'−'),
+      h('button',{onclick:()=>{st.food=Math.min(A.food,foodNow()+500);rerenderSheet();}},'＋')),
+    h('p',{class:'note'},`城中兵${fmtNum(A.troops)}、糧${fmtNum(A.food)}。每回合約消耗${Math.ceil(st.total/150)}糧，糧盡則攻擊力降為7成；打完剩餘的糧會帶回。`),
+    h('div',{class:'btnrow'},h('button',{class:'primary',onclick:()=>{st.alloc=splitAlloc(st.total,st.picks.length);step2();}},'下一步：分配兵力'))));
+  step1();
+}
+function showBattleResult(b){
+  const ov=$('#battle');ov.hidden=false;ov.scrollTop=0;
+  const mineAtk=b.a.f===S.pf,D=S.cities[b.to];
+  const pw=mineAtk?b.done==='win':b.done!=='win';
+  Snd.setMode('map');
+  if(pw&&(!mineAtk||b.done==='win'))Snd.play('win');else if(!pw&&(!mineAtk||b.done==='lose'))Snd.play('lose');
+  const head=mineAtk?b.txt:(pw?`守住了${D.name}！`:`${D.name}失守了。`);
+  const lines=[];
+  if(!mineAtk)lines.push(b.txt);
+  if(b.extra)lines.push(b.extra);
+  else lines.push(mineAtk?`我軍剩餘${fmtNum(Math.max(0,b.a.n))}（損${fmtNum(Math.max(0,b.a.n0-b.a.n))}），敵軍剩餘${fmtNum(Math.max(0,b.d.n))}（損${fmtNum(Math.max(0,b.d.n0-b.d.n))}）。`
+    :`敵軍剩餘${fmtNum(Math.max(0,b.a.n))}（損${fmtNum(Math.max(0,b.a.n0-b.a.n))}），我軍剩餘${fmtNum(Math.max(0,b.d.n))}。`);
+  ov.replaceChildren(h('div',{class:'bwrap'},
+    h('h2',{},`${D.name}攻城戰`),
+    h('div',{class:'result'},h('b',{},head),lines.map(l=>h('p',{},l))),
+    h('div',{class:'btnrow'},h('button',{class:'primary',onclick:()=>closeBattle(b)},'繼續'))));
+}
+function closeBattle(b){
+  $('#battle').hidden=true;G=null;
+  if(b.a.f===S.pf){if(b.done==='win')sel=b.to;}
+  else rep(`${b.txt}${b.extra?'　'+b.extra:''}（攻方損${Math.max(0,b.a.n0-b.a.n)}）`);
+  checkEnd();
+  if(S.over){pending=[];inFlow=false;b.after=null;refresh();$('#btnEnd').disabled=false;showEnd();return;}
+  refresh();
+  if(b.after){const f=b.after;b.after=null;f();return;}
+  if(b.a.f===S.pf&&b.done==='win'&&captivesOf(b.to).length)toast('有俘虜待處理（見「人事」）');
+}
+
+/* grid battle */
+const tokName=u=>u.g.name.slice(0,3);
+const kfmt=n=>n>=1000?(n/1000).toFixed(1).replace(/\.0$/,'')+'k':String(n);
+function retreatChoices(b){
+  let near=S.cities.filter(x=>x.f===S.pf&&x.id!==b.to&&ADJ[b.to].includes(x.id));
+  if(!near.length)near=S.cities.filter(x=>x.f===S.pf&&x.id!==b.to);
+  return near;
+}
+function startGrid(b,pside){
+  Snd.setMode('battle');G=initGrid(b);G.pside=pside||'a';
+  if(G.done){endGrid();return;}
+  if(G.pside==='d'){G.busy=true;drawGrid();aiPhase('a',afterRound);}
+  else drawGrid();
+}
+function drawGrid(){
+  const ov=$('#battle'),st=ov.scrollTop;ov.hidden=false;
+  const b=G.b,D=S.cities[b.to],s=G.sel,me=G.pside;
+  const cells=[];
+  for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+    const ter=G.t[y][x],u=uAt(G,x,y);
+    let cls='cell '+ter;
+    if(s&&!s.acted&&!s.moved&&!u&&G.reach[kk(x,y)]!==undefined)cls+=' mv';
+    if(s&&!s.acted&&u&&u.side!==me&&inRange(s,u,G.mode))cls+=' tg';
+    if(u&&s===u)cls+=' sel';
+    const tag=ter==='f'?'林':ter==='w'?'水':ter==='c'?'城':'';
+    cells.push(h('button',{class:cls,'aria-label':u?`${u.g.name}，兵${u.n}`:`${x+1},${y+1}`,onclick:()=>cellClick(x,y)},
+      tag?h('span',{class:'tl'},tag):null,
+      (cls.includes(' tg')&&G.mode==='atk')?h('span',{class:'mult'},'×'+(flankMult(G,s,u)*ratioMult(s,u)/(ter==='c'&&u.side==='d'?hqMult(G):1)).toFixed(1)):null,
+      u?h('span',{class:'tok'+(u.acted&&u.side===me?' done':'')+(u.side!==me?' foe':''),style:`background:${fc(u.side==='a'?b.a.f:b.d.f)}`},h('b',{},tokName(u)),h('i',{},kfmt(u.n))):null));
+  }
+  let info;
+  if(s){info=h('div',{class:'binfo'},h('b',{},`${s.g.name}`),`　兵${s.n}／${s.n0}　移動${movOf(s)}`,h('br'),`統${s.g.t} 武${s.g.w} 智${s.g.z}　`+(s.acted?'已行動':s.moved?'已移動，可攻擊或待機':'點亮格移動，或點紅框敵隊攻擊'));}
+  else info=h('div',{class:'binfo'},G.busy?'敵軍行動中…':(me==='a'?'點選我方部隊。奪下「城」格或殲滅守軍即可攻陷。':'點選我方守軍。守住「城」格並擊退敵軍；敵軍15回合內攻不下就會撤退。'));
+  const acting=s&&!s.acted&&!G.busy&&!G.auto;
+  const btn=(label,fn2,cls,dis)=>h('button',{class:cls||'',disabled:dis,onclick:fn2},label);
+  const retreatBtn=me==='a'
+    ?btn(G.confirmRet?'確定撤退？':'撤退',()=>{if(!G.confirmRet){G.confirmRet=true;drawGrid();return;}G.done='retreat';endGrid();},G.confirmRet?'warn':'',G.busy&&!G.auto)
+    :btn('撤退',()=>openRetreatSheet(),'',G.busy&&!G.auto);
+  const acts=h('div',{class:'acts'},
+    btn('攻擊',()=>{G.mode='atk';drawGrid();},G.mode==='atk'?'on':'',!acting),
+    btn('火計（範圍2）',()=>{G.mode='fire';drawGrid();},G.mode==='fire'?'on':'',!acting),
+    btn('待機',()=>{s.acted=true;G.sel=null;G.reach={};afterAct();},'',!acting),
+    btn('結束回合',()=>endPlayerPhase(),'',G.busy||G.auto),
+    btn(G.auto?'自動指揮中…':'自動指揮',()=>{if(G.busy)return;G.auto=true;G.sel=null;G.reach={};autoPlayer();},'',G.busy||G.auto),
+    retreatBtn);
+  ov.replaceChildren(h('div',{class:'bwrap'},
+    h('div',{class:'bhead'},h('h2',{},`${D.name}${me==='a'?'攻城戰':'守城戰'}`),h('span',{class:'note'},`第${Math.min(G.turn,15)}／15回合　糧${kfmt(G.food)}${G.food<=0?'（攻方斷糧）':''}　城防${Math.round(G.def)}（本陣×${hqMult(G).toFixed(1)}）`)),
+    h('div',{class:'grid'},cells),info,acts,
+    h('div',{class:'blog'},G.log.slice(-4).map(l=>h('p',{},l)))));
+  ov.scrollTop=st;
+}
+function openRetreatSheet(){
+  const cs=retreatChoices(G.b);
+  if(!cs.length){sfx('err');toast('沒有可撤退的城池');return;}
+  openSheet('撤退到哪座城？',()=>h('div',{},
+    h('p',{class:'note'},'城池會失守；帶走武將、剩餘兵力與約8成金糧（途中損失約1成兵力）。'),
+    h('div',{class:'list'},cs.map(x=>h('button',{class:'row',onclick:()=>{closeSheet();G.done='dretreat';G.retreatTo=x.id;G.busy=false;endGrid();}},h('b',{},x.name),h('span',{class:'gs'},`兵${fmtNum(x.troops)}`))))));
+}
+function cellClick(x,y){
+  if(!G||G.busy||G.done||G.auto)return;
+  G.confirmRet=false;
+  const s=G.sel,u=uAt(G,x,y),me=G.pside;
+  if(s&&!s.acted){
+    if(u&&u.side!==me&&inRange(s,u,G.mode)){
+      G.log.push(G.mode==='fire'?doFire(G,s,u):doAttack(G,s,u));
+      s.acted=true;G.sel=null;G.reach={};afterAct();return;
+    }
+    if(!u&&!s.moved&&G.reach[kk(x,y)]!==undefined){
+      s.x=x;s.y=y;s.moved=true;G.reach={};sfx('step');checkGrid(G);
+      if(G.done){endGrid();return;}
+      drawGrid();return;
+    }
+  }
+  if(u&&u.side===me&&!u.acted){G.sel=u;G.reach=u.moved?{}:reach(G,u);G.mode='atk';drawGrid();return;}
+  G.sel=null;G.reach={};drawGrid();
+}
+function afterAct(){
+  checkGrid(G);
+  if(G.done){endGrid();return;}
+  if(G.U.filter(u=>u.side===G.pside&&u.n>0).every(u=>u.acted)){endPlayerPhase();return;}
+  drawGrid();
+}
+function aiPhase(side,cb){
+  const us=G.U.filter(u=>u.side===side&&u.n>0);let i=0;
+  const step=()=>{
+    if(G.done){endGrid();return;}
+    if(i>=us.length){cb();return;}
+    const u=us[i++];if(u.n>0)aiUnit(G,u);
+    checkGrid(G);drawGrid();setTimeout(step,420);
+  };
+  step();
+}
+function afterRound(){
+  if(G.done){endGrid();return;}
+  if(G.auto){autoPlayer();return;}
+  G.busy=false;drawGrid();
+}
+function endPlayerPhase(){
+  if(!G||G.done)return;
+  G.sel=null;G.reach={};
+  for(const u of G.U)if(u.side===G.pside)u.acted=true;
+  checkGrid(G);if(G.done){endGrid();return;}
+  G.busy=true;
+  if(G.pside==='a'){aiPhase('d',()=>{endGridTurn(G);afterRound();});}
+  else{endGridTurn(G);if(G.done){endGrid();return;}aiPhase('a',afterRound);}
+}
+function autoPlayer(){
+  G.busy=true;
+  const us=G.U.filter(u=>u.side===G.pside&&u.n>0&&!u.acted);let i=0;
+  const step=()=>{
+    if(G.done){endGrid();return;}
+    if(i>=us.length){endPlayerPhase();return;}
+    const u=us[i++];if(u.n>0)aiUnit(G,u);
+    checkGrid(G);drawGrid();setTimeout(step,380);
+  };
+  step();
+}
+function endGrid(){
+  finishGrid(G);
+  showBattleResult(G.b);
+}
+
+/* turn flow */
+function openReport(title,lines){
+  openSheet(title,()=>h('div',{class:'lines'},lines.length?lines.map(l=>h('p',{},l)):h('p',{},'沒有紀錄。')));
+}
+function endTurn(){
+  const btn=$('#btnEnd');btn.disabled=true;
+  Snd.play('gong');S.log=[];pending=[];S.interactive=true;inFlow=true;
+  const prev=`${S.year}年${S.month}月`;
+  for(const f of shuffle(S.F.map((_,i)=>i).filter(f=>f!==S.pf)))if(fcount(f))aiTurn(f);
+  S.interactive=false;
+  processPending(()=>finishTurn(prev));
+}
+function processPending(done){
+  const next=()=>{
+    const b=pending.shift();
+    if(!b){done();return;}
+    handleIncoming(b,next);
+  };
+  next();
+}
+function handleIncoming(b,next){
+  const D=S.cities[b.to];
+  if(D.f!==S.pf){
+    if(D.f===b.a.f){ // 目標已被同一勢力佔領：取消進攻
+      const A=S.cities[b.from];A.troops+=b.a.n;A.food+=b.food||0;for(const g of b.a.gens)g.c=b.from;
+    }else{refreshDefenders(b);autoBattle(b);}
+    next();return;
+  }
+  refreshDefenders(b);
+  promptDefense(b,next);
+}
+function promptDefense(b,next){
+  const D=S.cities[b.to],A=S.cities[b.from];
+  const near=retreatChoices(b);
+  const adjOnly=near.some(x=>ADJ[b.to].includes(x.id));
+  let pick=null;
+  b.after=next;
+  Snd.play('drum');
+  openSheet(`${D.name}遇襲！`,()=>h('div',{},
+    h('p',{},`${fn(b.a.f)}軍自${A.name}來攻：兵${fmtNum(b.a.n)}，武將${b.a.gens.map(g=>g.name).join('、')}。`),
+    h('p',{},`守軍：兵${fmtNum(D.troops)}，城防${D.def}，武將${b.d.gens.map(g=>g.name).join('、')||'無'}。`),
+    h('div',{class:'btnrow'},
+      h('button',{class:'primary',onclick:()=>{closeSheet();startGrid(b,'d');}},'手動防守'),
+      h('button',{class:'ghost',onclick:()=>{closeSheet();autoRun(b);showBattleResult(b);}},'自動防守')),
+    h('div',{class:'cap'},near.length?(adjOnly?'或撤退到鄰近的城':'或撤退到我方其他城池')+'（帶走武將、兵力與金糧）':'無處可退'),
+    near.length?h('div',{class:'list'},near.map(x=>h('button',{class:'row'+(pick===x.id?' on':''),onclick:()=>{pick=x.id;rerenderSheet();}},h('b',{},x.name),h('span',{class:'gs'},`兵${fmtNum(x.troops)}　金${fmtNum(x.gold)}`)))):null,
+    pick!=null?h('div',{class:'btnrow'},h('button',{class:'ghost',onclick:()=>{closeSheet();performRetreat(b,pick,D.troops);showBattleResult(b);}},`確定撤退到${S.cities[pick].name}`)):null,
+    h('p',{class:'note'},'撤退後城池會失守；途中損失約1成兵力與2成金糧。')),true);
+}
+function finishTurn(prev){
+  tick();events();
+  advance();S.turn++;
+  checkEnd();
+  S.history.push(`【${prev}】`,...S.log);if(S.history.length>200)S.history=S.history.slice(-200);
+  inFlow=false;refresh();
+  $('#btnEnd').disabled=false;
+  if(S.over){showEnd();return;}
+  if(S.log.length)openReport(`${prev} 戰報`,S.log);else toast(`進入${S.year}年${S.month}月`);
+}
+function showEnd(){
+  clearSave();Snd.play(S.over==='win'?'win':'lose');
+  const m={win:'天下一統！',lose:'勢力滅亡',time:'天下未定'}[S.over];
+  const d={win:`${fn(S.pf)}平定群雄，歷時${S.turn}個月。`,lose:`${fn(S.pf)}軍失去了所有城池。`,time:`二十五年期限已到，你領有${fcount(S.pf)}座城池。`}[S.over];
+  openSheet(m,()=>h('div',{},h('p',{},d),h('div',{class:'btnrow'},h('button',{class:'primary',onclick:()=>{closeSheet();toTitle();}},'回到標題'))),true);
+}
+$('#btnEnd').onclick=endTurn;
+$('#btnLog').onclick=()=>openReport('近期戰報',S.history.slice().reverse());
+function howTo(){
+  openSheet('玩法說明',()=>h('div',{class:'lines'},
+    h('p',{},'每月每位武將可行動一次：內政（開墾、商業、築城、安民、徵兵、訓練）、人事（登用、俘虜、褒賞、調動）、計策（離間、煽動）、外交與輸送。'),
+    h('p',{},'登用可招募領地內任何一座城的在野武將。調動可把武將移到自己的其他城（每城至少留1人）。'),
+    h('p',{},'離間可降低敵將忠誠，過低時會投靠你或離開原主；煽動可降低敵城民忠，民心低落的城會發生叛亂。褒賞能提高自家武將忠誠，忠誠過低的武將會出走。'),
+    h('p',{},'外交可與他國結盟12個月，期間雙方不會進攻對方。'),
+    h('p',{},'城池被攻擊時，可以選擇手動指揮守城、自動防守，或撤退到鄰近的城（帶走武將、兵力與金糧，但城池會失守）。'),
+    h('p',{},'武將對各勢力有「仇恨值」：交戰會讓雙方武將的仇恨上升，離間失敗也會。仇恨越高，登用越難成功；遊說（無論成敗）和贈禮可降低仇恨，仇恨也會慢慢消退。對同一個人遊說失敗越多次，下次成功率越高。'),
+    h('p',{},'國與國之間有「友好度」（開局依歷史關係為20~80）：友好度越高，結盟越容易。外交、贈禮與同盟期間會提高友好度；交戰、流言、離間會降低它。友好度低的勢力更愛攻打你。'),
+    h('p',{},'出兵流程：①勾選出陣武將（最多5人）→②決定攜帶兵力與糧食→③分配每名武將的兵力。每隊兵力較多的一方攻擊力較高（每多一倍×1.2）；兩隊以上同時與一支敵軍相鄰可協同攻擊（2隊×2、3隊×4、4隊×6），敵、我雙方都適用；在林地防守受傷較少。'),
+    h('p',{},'戰場上可移動、攻擊或用火計（範圍2格）。奪下「城」格或殲滅守軍即攻陷；15回合內攻不下就撤軍。每回合消耗軍糧，糧盡攻擊力降為7成。也可選「自動指揮」或「自動戰鬥」。'),
+    h('p',{},'守軍站在「城」格上稱為本陣：城防越高，本陣的防守能力越高（城防0到100對應×1到×5，只加防守、不加攻擊）。火計攻擊本陣不會殺傷士兵，而是削減城防；普通攻擊也會小幅削減。先用火計拆掉城防，再圍攻本陣最有效。'),
+    h('p',{},'目標：25年內佔領全部三十座城。進度會自動存在這個瀏覽器中。')));
+}
+$('#btnHow').onclick=howTo;
+$('#btnMenu').onclick=()=>openSheet('選單',()=>h('div',{class:'list'},
+  h('button',{class:'row',onclick:()=>{closeSheet();howTo();}},h('b',{},'玩法說明')),
+  h('button',{class:'row',onclick:()=>{Snd.toggleMusic();syncAudio();rerenderSheet();}},h('b',{},'背景音樂'),h('span',{class:'gs'},Snd.music()?'開':'關')),
+  h('button',{class:'row',onclick:()=>{Snd.toggleSfx();syncAudio();rerenderSheet();}},h('b',{},'效果音'),h('span',{class:'gs'},Snd.sfx()?'開':'關')),
+  h('button',{class:'row',onclick:()=>{closeSheet();persist();toTitle();}},h('b',{},'回到標題'),h('small',{},'進度已自動儲存')),
+  h('button',{class:'row',onclick:()=>{closeSheet();startGame(S.scn,S.pf);}},h('b',{},'重新開始'),h('small',{},`以${fn(S.pf)}重新開局`))));
+
+/* title */
+function buildTitle(){
+  $('#tabs').replaceChildren(...[194,207].map(k=>h('button',{class:'tab'+(tScn===k?' on':''),onclick:()=>{tScn=k;buildTitle();}},h('b',{},SCEN[k].title),h('small',{},SCEN[k].sub))));
+  const sc=SCEN[tScn];
+  const rows=sc.F.map((f,i)=>({i,name:f[0],col:f[1],cs:CITY_DEF.filter((_,j)=>sc.own[j]===i).map(d=>d[0])})).filter(r=>r.cs.length).sort((a,b)=>b.cs.length-a.cs.length);
+  const diff=n=>n>=5?'容易':n>=3?'普通':n===2?'較難':'困難';
+  $('#picks').replaceChildren(...rows.map(r=>h('button',{class:'pick',onclick:()=>startGame(tScn,r.i)},
+    h('i',{style:`background:${r.col}`}),
+    h('div',{},h('b',{},r.name),h('small',{},`${r.cs.length}城：${r.cs.slice(0,4).join('、')}${r.cs.length>4?'…':''}`)),
+    h('em',{},diff(r.cs.length)))));
+  $('#btnResume').hidden=!loadSave();
+  syncAudio();
+}
+function toTitle(){Snd.setMode('map');$('#game').hidden=true;$('#title').hidden=false;buildTitle();window.scrollTo(0,0);}
+function enterGame(){
+  $('#title').hidden=true;$('#game').hidden=false;
+  sel=S.cities.find(c=>c.f===S.pf).id;
+  refresh();window.scrollTo(0,0);
+}
+function startGame(scn,pf){newGame(scn,pf);enterGame();toast(`${fn(pf)}軍，${S.year}年${S.month}月，開局`);}
+$('#btnResume').onclick=()=>{const s=loadSave();if(s){S=s;enterGame();}};
+buildTitle();
+</script>
+</body>
+</html>
